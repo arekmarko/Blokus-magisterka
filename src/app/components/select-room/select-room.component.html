@@ -1,0 +1,28 @@
+<div class="container p-3">
+    <h1>Hello, user!</h1>
+    <h5>Select your room!</h5>
+    <div id="selection" class="container mt-5 rounded-3">
+        <div class="row pt-4 px-3">
+            <h5 class="col">Rooms:</h5>
+            <div class="col text-end">
+                <button class="greenbutton" (click)="createRoom('user')">Create new room</button>
+            </div>
+        </div>
+    <div class="row p-3">
+        <hr class="solid">
+        <div class="col-8">
+            <a>User09432's room</a>
+        </div>
+        <div class="col text-end">
+            <button (click)="joinRoom('User09432')">Join</button>
+        </div>
+        <hr class="solid">
+        <div class="col-8">
+            <a>User14539's room</a>
+        </div>
+        <div class="col text-end">
+            <button>Join</button>
+        </div>
+    </div>
+</div>
+</div>
