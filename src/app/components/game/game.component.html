@@ -1,3 +1,32 @@
 <div class="">
         <canvas #board style="border: 1px solid white" class="game-board"></canvas>
+        <div *ngFor="let i of [].constructor(20)" style="max-width: 75%; margin: auto;">
+                <div class="row">
+                        <div class="col" *ngFor="let j of [].constructor(20)"
+                                style="border: 1px #222 solid; height: 30px; width: 30px;">
+                        </div>
+                </div>
+        </div>
+        <div class="example-box" cdkDrag></div>
+
+        <div class="shape" cdkDrag>
+                <div *ngFor="let m of SHAPE">
+                        <div class="row">
+                                <div *ngFor="let b of m" [ngClass]="{'box': b!=0}" style="height:30px; width: 30px">
+                                </div>
+                        </div>
+                </div>
+        </div>
+
+        <div *ngFor="let s of shaps">
+                <div class="shape" cdkDrag>
+                        <div *ngFor="let m of s">
+                                <div class="row">
+                                        <div *ngFor="let b of m" [ngClass]="{'box': b!=0}"
+                                                style="height:30px; width: 30px">
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </div>
 </div>

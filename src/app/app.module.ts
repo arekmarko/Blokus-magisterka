@@ -11,6 +11,7 @@ import { GameComponent } from './components/game/game.component';
 import { HomepageComponent } from './components/homepage/homepage.component';
 import { SelectRoomComponent } from './components/select-room/select-room.component';
 import { Piece } from './components/piece/piece.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { Piece } from './components/piece/piece.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
-    NgbModule
+    NgbModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]

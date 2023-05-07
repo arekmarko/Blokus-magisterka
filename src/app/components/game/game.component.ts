@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { BLOCK_SIZE, COLS, ROWS, SHAPES } from 'src/app/constants';
 import { Piece } from '../piece/piece.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-game',
@@ -19,13 +20,15 @@ export class GameComponent implements OnInit {
   level: any;
   board!: number[][];
   isDragging: boolean = false;
+  SHAPE: any = SHAPES[4];
+  shaps: any = SHAPES;
   
 
   constructor() { }
 
   ngOnInit(): void {
     this.initBoard();
-    this.play();
+    //this.play();
   }
 
   initBoard() {
@@ -57,6 +60,7 @@ export class GameComponent implements OnInit {
       this.piece.draw(shapeID);
     }
     console.table(this.board);
+    console.log(this.SHAPE);
   }
   
   drawBoard() {
@@ -72,5 +76,6 @@ export class GameComponent implements OnInit {
       });
     });
   }
+  
   
 }
