@@ -14,15 +14,15 @@ export class SocketioService {
   constructor() { }
 
   connect(username: string){
-    this.socket = io(environment.SOCKET_ENDPOINT);
+    this.socket = io('localhost:3000');
     this.socket.emit('send-username',{username: username})
   }
   joinGame(gameId: any){
-    this.socket = io(environment.SOCKET_ENDPOINT);
+    this.socket = io('localhost:3000');
     this.socket.emit('joinGame',{gameId: gameId})
   }
   create(username: any){
-    this.socket = io(environment.SOCKET_ENDPOINT);
+    this.socket = io('localhost:3000');
     this.socket.emit('createGame',{username: username})
   }
   getRooms(){

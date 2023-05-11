@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "mag-blokus": {
+      "hosting": {
+        "frontend": [
+          "mblokus"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "mag-blokus"
+  }
+}
