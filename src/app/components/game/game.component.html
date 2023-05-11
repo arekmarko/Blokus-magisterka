@@ -1,32 +1,49 @@
-<div class="">
-        <canvas #board style="border: 1px solid white" class="game-board"></canvas>
-        <div *ngFor="let i of [].constructor(20)" style="max-width: 75%; margin: auto;">
-                <div class="row">
-                        <div class="col" *ngFor="let j of [].constructor(20)"
-                                style="border: 1px #222 solid; height: 30px; width: 30px;">
-                        </div>
+<div class="container">
+    <div cdkDropListGroup>
+        <div class="board" *ngFor="let i of [].constructor(20); let xboard = index;">
+            <div class="row plansza">
+                <div 
+                class="col box-empty" 
+                *ngFor="let j of [].constructor(20); let yboard = index" 
+                (mouseenter)="check(xboard, yboard)"
+                (click)="placeDown(xboard,yboard)"
+                [ngClass]="board[xboard][yboard]==1 ? 'box-blue' : (tmpBoard[xboard][yboard]>0 ? 'box-tmp' : '')"
+                >
                 </div>
+            </div>
         </div>
-        <div class="example-box" cdkDrag></div>
+    </div>
 
-        <div class="shape" cdkDrag>
-                <div *ngFor="let m of SHAPE">
-                        <div class="row">
-                                <div *ngFor="let b of m" [ngClass]="{'box': b!=0}" style="height:30px; width: 30px">
-                                </div>
-                        </div>
-                </div>
-        </div>
+    
+</div>
+<button (click)="rotateLeft(selectedShape)">W lewo</button>
+<button (click)="rotateRight(selectedShape)">W prawo</button>
+<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">Toggle bottom offcanvas</button>
 
-        <div *ngFor="let s of shaps">
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasBottomLabel">Offcanvas bottom</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body small">
+    <div class="m-3 p-3 rounded border border-primary">
+        <div class="row row-cols-auto">
+            <div *ngFor="let s of shaps" class="col m-2">
                 <div class="shape" cdkDrag>
-                        <div *ngFor="let m of s">
-                                <div class="row">
-                                        <div *ngFor="let b of m" [ngClass]="{'box': b!=0}"
-                                                style="height:30px; width: 30px">
-                                        </div>
-                                </div>
+                    <div *ngFor="let x of s; let xi = index">
+                        <div class="row">
+                            <div *ngFor="let y of x; let yi = index" 
+                            [ngStyle]="{'border': (selectedShape==s && y!=0) ? 'null' : 'null'}"
+                            [ngClass]="{'box': y!=0}" 
+                            style="height:40px; width: 40px;"
+                            (mousedown)="selectShape(s,xi,yi)"
+                            data-bs-dismiss="offcanvas">
+                            </div>
                         </div>
+                    </div>
                 </div>
+            </div>
         </div>
+    </div>
+  </div>
 </div>

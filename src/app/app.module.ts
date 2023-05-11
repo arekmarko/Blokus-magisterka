@@ -10,8 +10,8 @@ import { LobbyComponent } from './components/lobby/lobby.component';
 import { GameComponent } from './components/game/game.component';
 import { HomepageComponent } from './components/homepage/homepage.component';
 import { SelectRoomComponent } from './components/select-room/select-room.component';
-import { Piece } from './components/piece/piece.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { Modal,Offcanvas } from 'bootstrap';
 
 @NgModule({
   declarations: [
@@ -28,9 +28,15 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     BrowserAnimationsModule,
     MaterialModule,
     NgbModule,
-    DragDropModule
+    DragDropModule,
+    
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [
+    AppComponent,
+    Modal,
+    Offcanvas,
+
+  ]
 })
 export class AppModule { }
