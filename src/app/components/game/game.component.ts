@@ -14,6 +14,7 @@ export class GameComponent implements OnInit {
   selectedShape!: number[][];
   coords: number[] = [0, 0];
   shaps: any = SHAPES;
+  canPlaceDown: boolean = false;
 
 
   constructor() { }
@@ -43,12 +44,16 @@ export class GameComponent implements OnInit {
   }
   check(x: any, y: any) {
     if (this.isDragging) {
-      //console.log(this.tmpBoard);
       this.tmpBoard = this.getEmptyBoard();
       //this.tmpBoard = this.board.map(elem => elem);
       this.selectedShape.forEach((xshape: any, xindex) => {
         xshape.forEach((yshape: any, yindex: any) => {
-          this.tmpBoard[x + xindex - this.coords[0]][y + yindex - this.coords[1]] = yshape;
+          if ((x + xindex - this.coords[0] > 20) || (y + yindex - this.coords[1] > 20)){
+            this.canPlaceDown = false;
+          } else {
+            this.tmpBoard[x + xindex - this.coords[0]][y + yindex - this.coords[1]] = yshape;
+            this.canPlaceDown = true;
+          }
         });
       });
     }
@@ -85,11 +90,17 @@ export class GameComponent implements OnInit {
   }
 
   placeDown(x:any,y:any) {
-    this.selectedShape.forEach((xshape: any, xindex) => {
-      xshape.forEach((yshape: any, yindex: any) => {
-        this.board[x + xindex - this.coords[0]][y + yindex - this.coords[1]] = yshape;
+    if (this.canPlaceDown) {
+      this.selectedShape.forEach((xshape: any, xindex) => {
+        xshape.forEach((yshape: any, yindex: any) => {
+          if (yshape > 0) {
+            this.board[x + xindex - this.coords[0]][y + yindex - this.coords[1]] = yshape;
+          }
+        });
       });
-    });
-    this.selectedShape = [];
+      this.selectedShape = [];
+    } else {
+      console.log("You can't place it here");
+    }
   }
 }

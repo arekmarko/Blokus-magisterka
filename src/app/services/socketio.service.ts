@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Socket, io } from 'socket.io-client';
-import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -26,10 +25,12 @@ export class SocketioService {
     this.socket.emit('createGame',{username: username})
   }
   getRooms(){
-    this.socket.on('roomList', rooms => {
-      this.rooms = Object.keys(rooms);
-      console.log(this.rooms);
+    return new Observable((observer) =>{
+      this.socket.on('roomList', rooms => {
+      observer.next(rooms);
+      //console.log(this.rooms);
     })
+  })
   }
   receiveJoinedPlayers() {
     return new Observable((observer) => {

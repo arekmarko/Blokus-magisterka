@@ -3,25 +3,29 @@
     <h5>Select your room!</h5>
     <div id="selection" class="container mt-5 rounded-3">
         <div class="row pt-4 px-3">
-            <h5 class="col">Rooms:</h5>
-            <div class="col text-end">
-                <button class="greenbutton" (click)="createRoom('user')">Create new room</button>
+            <h5 class="col-2">Rooms:</h5>
+            <div class="col">
+                <input class="form-control" [(ngModel)]="username" type="text">
+            </div>
+            <div class="col-5 text-end">
+                <button class="greenbutton" (click)="createRoom()">Create new room</button>
             </div>
         </div>
     <div class="row p-3">
-        <hr class="solid">
-        <div class="col-8">
-            <a>User09432's room</a>
+        <div *ngFor="let r of rooms">
+            <hr class="solid">
+            <div class="col-8">
+                <a>{{r}}</a>
+            </div>
+            <div class="col text-end">
+                <button (click)="joinRoom(r)">Join</button>
+            </div>
         </div>
-        <div class="col text-end">
-            <button (click)="joinRoom('User09432')">Join</button>
-        </div>
-        <hr class="solid">
-        <div class="col-8">
-            <a>User14539's room</a>
-        </div>
-        <div class="col text-end">
-            <button>Join</button>
+        <div *ngIf="rooms?.length === 0">
+            <hr class="solid">
+            <div class="text-center">
+                <a style="color: #666">There is no room yet.</a>
+            </div>
         </div>
     </div>
 </div>

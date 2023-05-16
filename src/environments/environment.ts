@@ -6,13 +6,13 @@ export const environment = {
   production: false,
   SOCKET_ENDPOINT: 'http://localhost:3000',
   firebase: {
-    apiKey: "AIzaSyBLNdf5a81r0OzyiCIydy4crxhsRUwqKcg",
-    authDomain: "mag-blokus.firebaseapp.com",
-    projectId: "mag-blokus",
-    storageBucket: "mag-blokus.appspot.com",
-    messagingSenderId: "12453102094",
-    appId: "1:12453102094:web:3e387288abd51713da725f",
-    measurementId: "G-RVM7LT6HV7"
+    projectId: 'mag-blokus',
+    appId: '1:12453102094:web:3e387288abd51713da725f',
+    storageBucket: 'mag-blokus.appspot.com',
+    apiKey: 'AIzaSyBLNdf5a81r0OzyiCIydy4crxhsRUwqKcg',
+    authDomain: 'mag-blokus.firebaseapp.com',
+    messagingSenderId: '12453102094',
+    measurementId: 'G-RVM7LT6HV7',
   },
 };
 const firebaseConfig = {
