@@ -12,14 +12,10 @@ import { GameComponent } from './components/game/game.component';
 import { HomepageComponent } from './components/homepage/homepage.component';
 import { SelectRoomComponent } from './components/select-room/select-room.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { Modal,Offcanvas } from 'bootstrap';
-import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
-import { provideAuth,getAuth } from '@angular/fire/auth';
-import { provideDatabase,getDatabase } from '@angular/fire/database';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFireModule } from '@angular/fire/compat';
 import { FormsModule } from '@angular/forms';
+import { AuthenticationService } from './services/auth/authentication.service';
 
 @NgModule({
   declarations: [
@@ -28,7 +24,6 @@ import { FormsModule } from '@angular/forms';
     GameComponent,
     HomepageComponent,
     SelectRoomComponent,
-    
   ],
   imports: [
     BrowserModule,
@@ -42,7 +37,9 @@ import { FormsModule } from '@angular/forms';
     AngularFireModule.initializeApp(environment.firebase),
     
   ],
-  providers: [],
+  providers: [
+    AuthenticationService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
