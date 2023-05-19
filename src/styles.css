@@ -11,7 +11,7 @@ h3 {
     font-size: 28px;
     padding-inline: 20px;
 }
-button {
+.button {
     border: 1px solid #eee;
     color: #eee;
     background-color: #111;
@@ -21,7 +21,7 @@ button {
     margin: 25px;
     transition: 0.5s ease-in-out;
 }
-button:hover {
+.button:hover {
     color: #111;
     background-color: #eee;
 }   

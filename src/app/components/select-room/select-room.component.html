@@ -1,11 +1,11 @@
 <div class="container p-3">
-    <h1>Hello, user!</h1>
+    <h1 *ngIf="auth.currentUser$ | async as user">Hello, {{user.displayName}}!</h1>
     <h5>Select your room!</h5>
     <div id="selection" class="container mt-5 rounded-3">
         <div class="row pt-4 px-3">
             <h5 class="col-2">Rooms:</h5>
             <div class="col">
-                <input class="form-control" [(ngModel)]="username" type="text">
+                <input class="form-control" [(ngModel)]="roomName" type="text">
             </div>
             <div class="col-5 text-end">
                 <button class="greenbutton" (click)="createRoom()">Create new room</button>
@@ -15,7 +15,7 @@
         <div *ngFor="let r of rooms">
             <hr class="solid">
             <div class="col-8">
-                <a>{{r}}</a>
+                <a>{{r.roomName}}</a>
             </div>
             <div class="col text-end">
                 <button (click)="joinRoom(r)">Join</button>

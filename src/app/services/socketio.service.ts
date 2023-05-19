@@ -16,13 +16,13 @@ export class SocketioService {
     this.socket = io('localhost:3000');
     this.socket.emit('send-username',{username: username})
   }
-  joinGame(gameId: any){
+  joinGame(username: any, gameId: any){
     this.socket = io('localhost:3000');
-    this.socket.emit('joinGame',{gameId: gameId})
+    this.socket.emit('joinGame',{username: username, gameId: gameId})
   }
-  create(username: any){
+  create(gameId: any, roomName: any, username: any){
     this.socket = io('localhost:3000');
-    this.socket.emit('createGame',{username: username})
+    this.socket.emit('createGame',{gameId: gameId, roomName: roomName, username: username})
   }
   getRooms(){
     return new Observable((observer) =>{

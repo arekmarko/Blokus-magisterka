@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SocketioService } from 'src/app/services/socketio.service';
 import { v4 as uuidv4 } from 'uuid';
+import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 @Component({
   selector: 'app-select-room',
   templateUrl: './select-room.component.html',
@@ -9,26 +10,29 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class SelectRoomComponent implements OnInit {
 
-  username: any;
+  roomName: any;
   rooms: any;
-  
-  constructor(private socketIoService: SocketioService, private router: Router) { }
+
+  constructor(private socketIoService: SocketioService, private router: Router, public auth: AuthenticationService) { }
 
   ngOnInit(): void {
-    this.socketIoService.connect("arkadiusz");
-    //this.socketIoService.getRooms();
-    this.receiveRoomsList();
+    this.auth.auth.authState.subscribe(() => {
+      this.socketIoService.connect(this.auth.name);
+      this.receiveRoomsList();
+    });
+    
   }
 
-  joinRoom(name: string) {
-    console.log("joined " + name);
-   this.socketIoService.joinGame(name);
+  joinRoom(room: any) {
+    console.log("joined " + room.roomName);
+    this.socketIoService.joinGame(this.auth.name, room.gameId);
+    this.router.navigate(['/lobby', room.gameId]);
   }
-
+  
   createRoom() {
-    this.socketIoService.create(this.username);
     const uuid = uuidv4();
     this.router.navigate(['/lobby', uuid]);
+    this.socketIoService.create(uuid, this.roomName, this.auth.name);
   }
   receiveRoomsList() {
     this.socketIoService.getRooms().subscribe((message) => {

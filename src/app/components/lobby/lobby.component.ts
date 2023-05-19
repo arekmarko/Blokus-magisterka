@@ -9,6 +9,7 @@ import { SocketioService } from 'src/app/services/socketio.service';
 })
 export class LobbyComponent implements OnInit {
   gameId: any;
+  room: any;
 
   constructor(private socketIoService: SocketioService, private route: ActivatedRoute) { }
 
@@ -18,8 +19,9 @@ export class LobbyComponent implements OnInit {
   }
 
   receiveJoinedPlayers() {
-    this.socketIoService.receiveJoinedPlayers().subscribe((message) => {
-      console.log(message);
+    this.socketIoService.receiveJoinedPlayers().subscribe((message: any) => {
+      this.room = message;
+      console.log('receive:' + message.roomName);
     });
   }
 }

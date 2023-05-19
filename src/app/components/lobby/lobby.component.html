@@ -1,3 +1,5 @@
 <p>lobby {{gameId}} works!</p>
-
+<div *ngIf="room">
+    <a *ngFor="let p of room.users">{{p}}</a>
+</div>
 <button class="greenbutton" routerLink="/game">Start game</button>
