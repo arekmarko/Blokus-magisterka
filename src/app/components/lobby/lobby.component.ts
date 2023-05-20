@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SocketioService } from 'src/app/services/socketio.service';
 
 @Component({
@@ -10,18 +11,30 @@ import { SocketioService } from 'src/app/services/socketio.service';
 export class LobbyComponent implements OnInit {
   gameId: any;
   room: any;
+  username: any;
 
-  constructor(private socketIoService: SocketioService, private route: ActivatedRoute) { }
+  constructor(private socketIoService: SocketioService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.gameId = this.route.snapshot.paramMap.get('id');
     this.receiveJoinedPlayers();
+    this.start();
   }
 
   receiveJoinedPlayers() {
-    this.socketIoService.receiveJoinedPlayers().subscribe((message: any) => {
+    this.socketIoService.receiveJoinedPlayers(this.gameId).subscribe((message: any) => {
       this.room = message;
       console.log('receive:' + message.roomName);
     });
+  }
+
+  start() {
+    this.socketIoService.isStarting().subscribe(() => {
+      this.router.navigate(['/game', this.gameId]);
+    })
+  }
+
+  startGame() {
+    this.socketIoService.startGame(this.gameId);
   }
 }

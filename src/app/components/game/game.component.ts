@@ -1,5 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { BLOCK_SIZE, COLS, ROWS, SHAPES } from 'src/app/constants';
+import { SocketioService } from 'src/app/services/socketio.service';
 
 @Component({
   selector: 'app-game',
@@ -8,6 +10,7 @@ import { BLOCK_SIZE, COLS, ROWS, SHAPES } from 'src/app/constants';
 })
 export class GameComponent implements OnInit {
 
+  gameId: any;
   board!: number[][];
   tmpBoard!: number[][];
   isDragging: boolean = false;
@@ -15,11 +18,15 @@ export class GameComponent implements OnInit {
   coords: number[] = [0, 0];
   shaps: any = SHAPES;
   canPlaceDown: boolean = false;
+  round: number = 1; 
 
-
-  constructor() { }
+  constructor(private socketIoService: SocketioService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.gameId = this.route.snapshot.paramMap.get('id');
+    this.socketIoService.watchBoard().subscribe((message: any) =>{
+      this.board = message;
+    });
     this.play();
   }
 
@@ -31,8 +38,6 @@ export class GameComponent implements OnInit {
   play() {
     this.board = this.getEmptyBoard();
     this.tmpBoard = this.getEmptyBoard();
-    //console.table(this.board);
-    //console.log(this.shaps);
   }
 
 
@@ -44,19 +49,108 @@ export class GameComponent implements OnInit {
   }
   check(x: any, y: any) {
     if (this.isDragging) {
+      let tmpCanPlaceDown = true;
+      let tmpCanConnect = false;
       this.tmpBoard = this.getEmptyBoard();
-      //this.tmpBoard = this.board.map(elem => elem);
       this.selectedShape.forEach((xshape: any, xindex) => {
         xshape.forEach((yshape: any, yindex: any) => {
-          if ((x + xindex - this.coords[0] > 20) || (y + yindex - this.coords[1] > 20)){
-            this.canPlaceDown = false;
-          } else {
-            this.tmpBoard[x + xindex - this.coords[0]][y + yindex - this.coords[1]] = yshape;
-            this.canPlaceDown = true;
+          if (this.selectedShape[xindex][yindex] > 0) {
+            if (this.isOutOfBound(x + xindex - this.coords[0], y + yindex - this.coords[1])){
+              tmpCanPlaceDown = false;
+            } 
+            if (this.isOverlaping(x + xindex - this.coords[0], y + yindex - this.coords[1])){
+              tmpCanPlaceDown = false;
+            }
+            if (this.isEdging(x + xindex - this.coords[0], y + yindex - this.coords[1])){
+              tmpCanPlaceDown = false;
+            } 
+            if (this.canConnect(x + xindex - this.coords[0], y + yindex - this.coords[1])){
+              tmpCanConnect = true;
+            }
+            console.log(tmpCanPlaceDown);
+            this.tmpBoard[x + xindex - this.coords[0]][y + yindex - this.coords[1]] = yshape;            
           }
         });
       });
+      if (tmpCanPlaceDown==true && tmpCanConnect){
+        this.canPlaceDown = true;
+      } else {
+        this.canPlaceDown = false;
+      }
     }
+  }
+  isOutOfBound(x: number, y: number) {
+    if ((x >= 20) || (y >= 20) || (x < 0) || (y < 0)){
+      console.log('Piece is out of bounds');
+      return true;
+    }
+    return false;
+  }
+  isOverlaping(x: any, y: number) {
+    if (this.board[x][y] > 0){
+      console.log('is overlaping');
+      return true;
+    }
+    return false;
+  }
+  isEdging(x: any, y: any){
+    if (x-1 >= 0){
+      if (this.board[x-1][y] > 0) {
+        console.log('piece is edgeing');
+        return true;
+      }
+    }
+    if (x+1 < 20){
+      if (this.board[x+1][y] > 0){
+        console.log('piece is edgeing');
+        return true;
+      }
+    }
+    if (y-1 >= 0){
+      if (this.board[x][y-1] > 0){
+        console.log('piece is edgeing');
+        return true;
+      }
+    }
+    if (y+1 < 20){
+      if (this.board[x][y+1] > 0){
+        console.log('piece is edgeing');
+        return true;
+      } 
+    }
+    return false;
+  }
+  canConnect(x: any, y: any) {
+    if (this.round==1){
+      if ((x==0 && y==0) || (x==19 && y==19) || (x==0 && y==19) || (x==19 && y==0)){
+        return true;
+      }
+    } 
+    if (x-1 >= 0 && y-1 >= 0){
+      if (this.board[x-1][y-1] > 0) {
+        console.log('can connect');
+        return true;
+      }
+    }
+    if (x-1 >= 0 && y+1 < 20){
+      if (this.board[x-1][y+1] > 0) {
+        console.log('can connect');
+        return true;
+      }
+    }
+    if (x+1 < 20 && y-1 >= 0){
+      if (this.board[x+1][y-1] > 0){
+        console.log('can connect');
+        return true;
+      }
+    }
+    if (x+1 < 20 && y+1 < 20){
+      if (this.board[x+1][y+1] > 0){
+        console.log('can connect');
+        return true;
+      }
+    }
+    return false;
   }
   rotateLeft(matrix: any) {
     const n = matrix.length;
@@ -99,6 +193,9 @@ export class GameComponent implements OnInit {
         });
       });
       this.selectedShape = [];
+      console.log(this.round);
+      this.round = this.round+1;
+      this.socketIoService.placeDown(this.gameId, this.board);
     } else {
       console.log("You can't place it here");
     }

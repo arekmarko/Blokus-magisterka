@@ -28,13 +28,34 @@ export class SocketioService {
     return new Observable((observer) =>{
       this.socket.on('roomList', rooms => {
       observer.next(rooms);
-      //console.log(this.rooms);
     })
   })
   }
-  receiveJoinedPlayers() {
+  receiveJoinedPlayers(gameId: any) {
+    this.socket.emit('receiveJoinedPlayers',{gameId: gameId});
     return new Observable((observer) => {
-      this.socket.on('joinGame', (message) => {
+      this.socket.on('joinedPlayers', (message) => {
+        observer.next(message);
+      })
+    });
+  }
+  startGame(gameId: any) {
+    this.socket.emit('startGame', {gameId: gameId});
+  }
+  isStarting() {
+    return new Observable((observer) => {
+      this.socket.on('start', (message) => {
+        observer.next(message);
+      })
+    });
+  }
+
+  placeDown(gameId: any, board: any) {
+    this.socket.emit('newBoard', {gameId: gameId, board: board});
+  }
+  watchBoard() {
+    return new Observable((observer) => {
+      this.socket.on('updateBoard', (message) => {
         observer.next(message);
       })
     });
