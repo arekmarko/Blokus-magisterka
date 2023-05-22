@@ -49,7 +49,9 @@ export class SocketioService {
       })
     });
   }
-
+  gameStarted(gameId: any, board: any) {
+    this.socket.emit('gameStarted', {gameId: gameId, board: board});
+  }
   placeDown(gameId: any, board: any) {
     this.socket.emit('newBoard', {gameId: gameId, board: board});
   }

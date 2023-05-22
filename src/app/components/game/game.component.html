@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container my-5">
     <div cdkDropListGroup>
         <div class="board" *ngFor="let i of [].constructor(20); let xboard = index;">
             <div class="row plansza">
@@ -7,7 +7,17 @@
                 *ngFor="let j of [].constructor(20); let yboard = index" 
                 (mouseenter)="check(xboard, yboard)"
                 (click)="placeDown(xboard,yboard)"
-                [ngClass]="board[xboard][yboard]==1 ? 'box-blue' : (tmpBoard[xboard][yboard]>0 ? 'box-tmp' : '')"
+                [ngStyle] = "{'box-shadow': (xboard==0 && yboard==0) ? 'rgba(37, 194, 241, 0.6) -5px -5px, rgba(37, 194, 241, 0.5) -10px -10px, rgba(37, 194, 241, 0.4) -15px -15px, rgba(37, 194, 241, 0.3) -20px -20px, rgba(37, 194, 241, 0.2) -25px -25px' :
+                ((xboard==0 && yboard==19) ? 'rgba(255, 255, 170, 0.6) 5px -5px, rgba(255, 255, 170, 0.5) 10px -10px, rgba(255, 255, 170, 0.4) 15px -15px, rgba(255, 255, 170, 0.3) 20px -20px, rgba(255, 255, 170, 0.2) 25px -25px' : 
+                ((xboard==19 && yboard==0) ? 'rgba(240, 46, 170, 0.6) -5px 5px, rgba(240, 46, 170, 0.5) -10px 10px, rgba(240, 46, 170, 0.4) -15px 15px, rgba(240, 46, 170, 0.3) -20px 20px, rgba(240, 46, 170, 0.2) -25px 25px' : 
+                ((xboard==19 && yboard==19) ? 'rgba(136, 255, 170, 0.6) 5px 5px, rgba(136, 255, 170, 0.5) 10px 10px, rgba(136, 255, 170, 0.4) 15px 15px, rgba(136, 255, 170, 0.3) 20px 20px, rgba(136, 255, 170, 0.2) 25px 25px' : 
+                '')))}"
+                [ngClass] = "board[xboard][yboard]==1 ? 'box-blue' : 
+                (board[xboard][yboard]==2 ? 'box-red' : 
+                (board[xboard][yboard]==3 ? 'box-green' : 
+                (board[xboard][yboard]==4 ? 'box-yellow' :
+                (tmpBoard[xboard][yboard]>0 ? 'box-tmp' : ''))))"
+                
                 >
                 </div>
             </div>
@@ -15,10 +25,34 @@
     </div>
 
     
+    <button (click)="rotateLeft(selectedShape)">W lewo</button>
+    <button (click)="rotateRight(selectedShape)">W prawo</button>
+    <button (click)="cancelRound()">Pass</button>
+    
+    <div class="m-3 p-3 rounded border border-primary">
+        <div class="row row-cols-auto">
+            <div *ngFor="let s of shaps" class="col m-2">
+                <div class="shape" cdkDrag>
+                    <div *ngFor="let x of s; let xi = index">
+                        <div class="row">
+                            <div *ngFor="let y of x; let yi = index" 
+                            [ngStyle]="{'border': (selectedShape==s && y!=0) ? 'null' : 'null'}"
+                            [ngClass]="{'box': y!=0}" 
+                            style="height:40px; width: 40px;"
+                            (mousedown)="selectShape(s,xi,yi)"
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<button (click)="rotateLeft(selectedShape)">W lewo</button>
-<button (click)="rotateRight(selectedShape)">W prawo</button>
+
+</div>
+
 <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">Toggle bottom offcanvas</button>
+<p *ngFor="let user of room?.users; let i = index" [ngStyle]="{'color': i==0 ? 'blue' : (i==1 ? 'red' : (i==2 ? 'green' : 'yellow'))}">{{user}}<span *ngIf="name==currentPlayer && name==user"> (you)</span></p>
 
 <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
   <div class="offcanvas-header">

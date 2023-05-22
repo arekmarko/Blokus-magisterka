@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BLOCK_SIZE, COLS, ROWS, SHAPES } from 'src/app/constants';
+import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { SocketioService } from 'src/app/services/socketio.service';
 
 @Component({
@@ -11,6 +12,8 @@ import { SocketioService } from 'src/app/services/socketio.service';
 export class GameComponent implements OnInit {
 
   gameId: any;
+  room: any;
+  name: any;
   board!: number[][];
   tmpBoard!: number[][];
   isDragging: boolean = false;
@@ -18,24 +21,38 @@ export class GameComponent implements OnInit {
   coords: number[] = [0, 0];
   shaps: any = SHAPES;
   canPlaceDown: boolean = false;
-  round: number = 1; 
+  round: number = 1;
+  currentPlayer: any;
+  currentPlayerIndex: any;
 
-  constructor(private socketIoService: SocketioService, private route: ActivatedRoute) { }
+  constructor(private socketIoService: SocketioService, private route: ActivatedRoute, private auth: AuthenticationService) { }
 
   ngOnInit(): void {
-    this.gameId = this.route.snapshot.paramMap.get('id');
-    this.socketIoService.watchBoard().subscribe((message: any) =>{
-      this.board = message;
-    });
     this.play();
+    this.auth.auth.authState.subscribe(() => {
+      this.name = this.auth.name;
+      this.receiveJoinedPlayers();
+      this.socketIoService.gameStarted(this.gameId, this.board);
+      this.socketIoService.watchBoard().subscribe((message: any) =>{
+        this.board = message.board;
+        this.currentPlayer = message.player;
+        this.currentPlayerIndex = message.playerIndex;
+        this.round = message.round;
+      });
+    });
   }
-
+  receiveJoinedPlayers() {
+    this.socketIoService.receiveJoinedPlayers(this.gameId).subscribe((message: any) => {
+      this.room = message;
+    });
+  }
   getEmptyBoard(): number[][] {
     return Array.from({ length: ROWS }, () =>
       Array(COLS).fill(0));
   }
 
   play() {
+    this.gameId = this.route.snapshot.paramMap.get('id');
     this.board = this.getEmptyBoard();
     this.tmpBoard = this.getEmptyBoard();
   }
@@ -58,21 +75,19 @@ export class GameComponent implements OnInit {
             if (this.isOutOfBound(x + xindex - this.coords[0], y + yindex - this.coords[1])){
               tmpCanPlaceDown = false;
             } 
-            if (this.isOverlaping(x + xindex - this.coords[0], y + yindex - this.coords[1])){
+            else if (this.isOverlaping(x + xindex - this.coords[0], y + yindex - this.coords[1])){
               tmpCanPlaceDown = false;
             }
-            if (this.isEdging(x + xindex - this.coords[0], y + yindex - this.coords[1])){
+            else if (this.isEdging(x + xindex - this.coords[0], y + yindex - this.coords[1])){
               tmpCanPlaceDown = false;
             } 
             if (this.canConnect(x + xindex - this.coords[0], y + yindex - this.coords[1])){
               tmpCanConnect = true;
             }
-            console.log(tmpCanPlaceDown);
-            this.tmpBoard[x + xindex - this.coords[0]][y + yindex - this.coords[1]] = yshape;            
           }
         });
       });
-      if (tmpCanPlaceDown==true && tmpCanConnect){
+      if (tmpCanPlaceDown && tmpCanConnect && this.name==this.currentPlayer){
         this.canPlaceDown = true;
       } else {
         this.canPlaceDown = false;
@@ -80,10 +95,11 @@ export class GameComponent implements OnInit {
     }
   }
   isOutOfBound(x: number, y: number) {
-    if ((x >= 20) || (y >= 20) || (x < 0) || (y < 0)){
+    if ((x > 19) || (y > 19) || (x < 0) || (y < 0)){
       console.log('Piece is out of bounds');
       return true;
     }
+    this.tmpBoard[x][y] = this.currentPlayerIndex+1;
     return false;
   }
   isOverlaping(x: any, y: number) {
@@ -95,25 +111,25 @@ export class GameComponent implements OnInit {
   }
   isEdging(x: any, y: any){
     if (x-1 >= 0){
-      if (this.board[x-1][y] > 0) {
+      if (this.board[x-1][y] == this.currentPlayerIndex+1) {
         console.log('piece is edgeing');
         return true;
       }
     }
     if (x+1 < 20){
-      if (this.board[x+1][y] > 0){
+      if (this.board[x+1][y] == this.currentPlayerIndex+1){
         console.log('piece is edgeing');
         return true;
       }
     }
     if (y-1 >= 0){
-      if (this.board[x][y-1] > 0){
+      if (this.board[x][y-1] == this.currentPlayerIndex+1){
         console.log('piece is edgeing');
         return true;
       }
     }
     if (y+1 < 20){
-      if (this.board[x][y+1] > 0){
+      if (this.board[x][y+1] == this.currentPlayerIndex+1){
         console.log('piece is edgeing');
         return true;
       } 
@@ -122,30 +138,30 @@ export class GameComponent implements OnInit {
   }
   canConnect(x: any, y: any) {
     if (this.round==1){
-      if ((x==0 && y==0) || (x==19 && y==19) || (x==0 && y==19) || (x==19 && y==0)){
+      if ((x==0 && y==0 && this.currentPlayerIndex==0) || (x==19 && y==19 && this.currentPlayerIndex==2) || (x==0 && y==19 && this.currentPlayerIndex==3) || (x==19 && y==0 && this.currentPlayerIndex==1)){
         return true;
       }
     } 
     if (x-1 >= 0 && y-1 >= 0){
-      if (this.board[x-1][y-1] > 0) {
+      if (this.board[x-1][y-1] == this.currentPlayerIndex+1) {
         console.log('can connect');
         return true;
       }
     }
     if (x-1 >= 0 && y+1 < 20){
-      if (this.board[x-1][y+1] > 0) {
+      if (this.board[x-1][y+1] == this.currentPlayerIndex+1) {
         console.log('can connect');
         return true;
       }
     }
     if (x+1 < 20 && y-1 >= 0){
-      if (this.board[x+1][y-1] > 0){
+      if (this.board[x+1][y-1] == this.currentPlayerIndex+1){
         console.log('can connect');
         return true;
       }
     }
     if (x+1 < 20 && y+1 < 20){
-      if (this.board[x+1][y+1] > 0){
+      if (this.board[x+1][y+1] == this.currentPlayerIndex+1){
         console.log('can connect');
         return true;
       }
@@ -165,7 +181,13 @@ export class GameComponent implements OnInit {
         matrix[y - j][i] = k;
       }
     }
-    
+    console.log(x);
+    console.log(this.coords);
+    let tmpX = this.coords[0];
+    let tmpY = this.coords[1];
+    this.coords[0] = y-tmpY;
+    this.coords[1] = y-tmpX;
+    console.log(this.coords);
   }
 
   rotateRight(matrix: any) {
@@ -181,6 +203,14 @@ export class GameComponent implements OnInit {
         matrix[j][y - i] = k
       }
     }
+    
+  }
+
+  cancelRound() {
+    if (this.name==this.currentPlayer){
+      this.selectedShape = [];
+      this.socketIoService.placeDown(this.gameId, this.board);
+    }
   }
 
   placeDown(x:any,y:any) {
@@ -188,13 +218,15 @@ export class GameComponent implements OnInit {
       this.selectedShape.forEach((xshape: any, xindex) => {
         xshape.forEach((yshape: any, yindex: any) => {
           if (yshape > 0) {
-            this.board[x + xindex - this.coords[0]][y + yindex - this.coords[1]] = yshape;
+            this.board[x + xindex - this.coords[0]][y + yindex - this.coords[1]] = this.currentPlayerIndex+1;
           }
         });
       });
+      let index = this.shaps.findIndex((s:any) => 
+        s === this.selectedShape
+      );
+      this.shaps.splice(index,1);
       this.selectedShape = [];
-      console.log(this.round);
-      this.round = this.round+1;
       this.socketIoService.placeDown(this.gameId, this.board);
     } else {
       console.log("You can't place it here");

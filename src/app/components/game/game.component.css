@@ -41,7 +41,7 @@
     margin: auto;
   }
   .box-blue {
-    background-color: #22ee;
+    background-color:  rgba(37, 194, 241, 0.8); /* #22ee; */
     border-radius: 4px;
     position: relative;
     /* border: 1px #22ee solid; */
@@ -49,7 +49,52 @@
   .box-blue::before {
     content: '';
     position: absolute;
-    background: #25e;
+    background: rgba(37, 194, 241, 0.6); /* #25e; */
+    top: 7px;
+    left: 7px;
+    right: 7px;
+    bottom: 7px;
+    z-index: 1;
+  }
+  .box-red {
+    background-color: rgba(240, 46, 170, 0.6);
+    border-radius: 4px;
+    position: relative;
+  }
+  .box-red::before {
+    content: '';
+    position: absolute;
+    background: rgba(240, 46, 170, 0.8);
+    top: 7px;
+    left: 7px;
+    right: 7px;
+    bottom: 7px;
+    z-index: 1;
+  }
+  .box-green {
+    background-color: rgba(136, 255, 170, 0.6);
+    border-radius: 4px;
+    position: relative;
+  }
+  .box-green::before {
+    content: '';
+    position: absolute;
+    background: rgba(136, 255, 170, 0.8);
+    top: 7px;
+    left: 7px;
+    right: 7px;
+    bottom: 7px;
+    z-index: 1;
+  }
+  .box-yellow {
+    background-color: rgba(255, 255, 170, 0.6);
+    border-radius: 4px;
+    position: relative;
+  }
+  .box-yellow::before {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 170, 0.8);
     top: 7px;
     left: 7px;
     right: 7px;
@@ -57,6 +102,22 @@
     z-index: 1;
   }
   .box-tmp {
-    background-color: white;
-    opacity: 0.7;
+    background-color: #888;
+  }
+  .blue-corner {
+    /* background-color: #5af; */
+    box-shadow: rgba(37, 194, 241, 0.6) -5px -5px, rgba(37, 194, 241, 0.5) -10px -10px, rgba(37, 194, 241, 0.4) -15px -15px, rgba(37, 194, 241, 0.3) -20px -20px, rgba(37, 194, 241, 0.2) -25px -25px;
+  }
+  .red-corner {
+    /* background-color: #f5a; */
+    box-shadow: rgba(240, 46, 170, 0.6) -5px 5px, rgba(240, 46, 170, 0.5) -10px 10px, rgba(240, 46, 170, 0.4) -15px 15px, rgba(240, 46, 170, 0.3) -20px 20px, rgba(240, 46, 170, 0.2) -25px 25px;
+  }
+  .yellow-corner {
+    /* background-color: #ffa; */
+    box-shadow: rgba(255, 255, 170, 0.6) 5px -5px, rgba(255, 255, 170, 0.5) 10px -10px, rgba(255, 255, 170, 0.4) 15px -15px, rgba(255, 255, 170, 0.3) 20px -20px, rgba(255, 255, 170, 0.2) 25px -25px;
+
+  }
+  .green-corner {
+    /* background-color: #8fa; */
+    box-shadow: rgba(136, 255, 170, 0.6) 5px 5px, rgba(136, 255, 170, 0.5) 10px 10px, rgba(136, 255, 170, 0.4) 15px 15px, rgba(136, 255, 170, 0.3) 20px 20px, rgba(136, 255, 170, 0.2) 25px 25px;
   }
