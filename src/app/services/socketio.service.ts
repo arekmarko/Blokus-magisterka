@@ -9,19 +9,21 @@ export class SocketioService {
 
   socket!: Socket;
   rooms: string[] = [];
+  url1: string = 'https://mblokus.azurewebsites.net:8080';
+  url: string = 'localhost:3000';
 
   constructor() { }
 
   connect(username: string){
-    this.socket = io('localhost:3000');
+    this.socket = io(this.url);
     this.socket.emit('send-username',{username: username})
   }
   joinGame(username: any, gameId: any){
-    this.socket = io('localhost:3000');
+    this.socket = io(this.url);
     this.socket.emit('joinGame',{username: username, gameId: gameId})
   }
   create(gameId: any, roomName: any, username: any){
-    this.socket = io('localhost:3000');
+    this.socket = io(this.url);
     this.socket.emit('createGame',{gameId: gameId, roomName: roomName, username: username})
   }
   getRooms(){
@@ -61,5 +63,8 @@ export class SocketioService {
         observer.next(message);
       })
     });
+  }
+  addBot(gameId: any) {
+    this.socket.emit('addBot', {gameId: gameId});
   }
 }

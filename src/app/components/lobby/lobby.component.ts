@@ -24,7 +24,6 @@ export class LobbyComponent implements OnInit {
   receiveJoinedPlayers() {
     this.socketIoService.receiveJoinedPlayers(this.gameId).subscribe((message: any) => {
       this.room = message;
-      console.log('receive:' + message.roomName);
     });
   }
 
@@ -36,5 +35,9 @@ export class LobbyComponent implements OnInit {
 
   startGame() {
     this.socketIoService.startGame(this.gameId);
+  }
+
+  addBot() {
+    this.socketIoService.addBot(this.gameId);
   }
 }
