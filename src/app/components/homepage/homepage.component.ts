@@ -37,7 +37,6 @@ export class HomepageComponent implements OnInit {
   }
   googleLogin() {
     this.auth.googleLogin();
-    //this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
   }
   logout() {
     this.auth.logout();

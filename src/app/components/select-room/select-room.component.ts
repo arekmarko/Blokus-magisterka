@@ -24,7 +24,6 @@ export class SelectRoomComponent implements OnInit {
   }
 
   joinRoom(room: any) {
-    console.log("joined " + room.roomName);
     this.socketIoService.joinGame(this.auth.name, room.gameId);
     this.router.navigate(['/lobby', room.gameId]);
   }

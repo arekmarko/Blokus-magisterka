@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterContentChecked, AfterViewChecked, AfterViewInit, Component, DoCheck, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SocketioService } from 'src/app/services/socketio.service';
@@ -8,7 +8,8 @@ import { SocketioService } from 'src/app/services/socketio.service';
   templateUrl: './lobby.component.html',
   styleUrls: ['./lobby.component.css']
 })
-export class LobbyComponent implements OnInit {
+
+export class LobbyComponent implements OnInit, OnDestroy {
   gameId: any;
   room: any;
   username: any;
@@ -19,6 +20,11 @@ export class LobbyComponent implements OnInit {
     this.gameId = this.route.snapshot.paramMap.get('id');
     this.receiveJoinedPlayers();
     this.start();
+  }
+
+  ngOnDestroy(): void {
+    this.socketIoService.leaveRoom(this.gameId, this.username);
+    console.log('onDestroy triggered');
   }
 
   receiveJoinedPlayers() {

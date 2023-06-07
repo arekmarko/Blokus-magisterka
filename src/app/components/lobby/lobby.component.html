@@ -1,7 +1,17 @@
-<p>lobby {{gameId}} works!</p>
-<div class="container card" *ngIf="room">
-    <a *ngFor="let p of room.users">{{p}}</a>
+<div class="container">
+
+    <h2>Welcome to <span style="color:chartreuse">{{room.roomName}}</span> room!</h2>
+    <div class="row">
+        <div class="container card col">
+            <p>sdf</p>
+        </div>
+        <div class="col-3">
+            <div class="container card" *ngIf="room">
+                <a *ngFor="let p of room.users">{{p}}</a>
+            </div>
+        </div>
+    </div>
+    <p>{{username}}</p>
+    <button class="button greenbutton" (click)="startGame()">Start game</button>
+    <button class="button greenbutton" (click)="addBot()">Add bot</button>
 </div>
-<p>{{username}}</p>
-<button class="greenbutton" (click)="startGame()">Start game</button>
-<button class="greenbutton" (click)="addBot()">Add bot</button>

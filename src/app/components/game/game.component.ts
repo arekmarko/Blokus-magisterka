@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BLOCK_SIZE, COLS, ROWS, SHAPES } from 'src/app/constants';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
@@ -9,21 +9,24 @@ import { SocketioService } from 'src/app/services/socketio.service';
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css']
 })
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit, OnDestroy {
 
   gameId: any;
   room: any;
   name: any;
+  myIndex: any;
   board!: number[][];
   tmpBoard!: number[][];
   isDragging: boolean = false;
-  selectedShape!: number[][];
+  //selectedShape!: number[][];
+  selectedShape = [[1,1], [1,1]];
   coords: number[] = [0, 0];
-  shaps: any = SHAPES;
+  shaps: any = SHAPES.slice();
   canPlaceDown: boolean = false;
   round: number = 1;
   currentPlayer: any;
   currentPlayerIndex: any;
+  countSmallPieces = 89;
 
   constructor(private socketIoService: SocketioService, private route: ActivatedRoute, private auth: AuthenticationService) { }
 
@@ -32,6 +35,7 @@ export class GameComponent implements OnInit {
     this.auth.auth.authState.subscribe(() => {
       this.name = this.auth.name;
       this.receiveJoinedPlayers();
+      console.log(this.room);
       this.socketIoService.gameStarted(this.gameId, this.board);
       this.socketIoService.watchBoard().subscribe((message: any) =>{
         this.board = message.board;
@@ -40,7 +44,14 @@ export class GameComponent implements OnInit {
         this.round = message.round;
       });
     });
+    console.log(this.shaps);
   }
+
+  ngOnDestroy(): void {
+      //this.shaps = SHAPES.slice();
+      console.log(this.shaps);
+  }
+
   receiveJoinedPlayers() {
     this.socketIoService.receiveJoinedPlayers(this.gameId).subscribe((message: any) => {
       this.room = message;
@@ -203,7 +214,16 @@ export class GameComponent implements OnInit {
         matrix[j][y - i] = k
       }
     }
-    
+  }
+
+  mirrorHorizontal(matrix: any) {
+    this.rotateLeft(matrix);
+    matrix.map(function(arr: any){return arr.reverse();});
+    this.rotateRight(matrix);
+  }
+  
+  mirrorVertical(matrix: any) {
+    matrix.map(function(arr: any){return arr.reverse();});
   }
 
   cancelRound() {
@@ -227,9 +247,31 @@ export class GameComponent implements OnInit {
       );
       this.shaps.splice(index,1);
       this.selectedShape = [];
+      this.countPieces();
       this.socketIoService.placeDown(this.gameId, this.board);
+      this.canPlaceDown = false;
     } else {
       console.log("You can't place it here");
     }
+  }
+  checkRow(x: any) {
+    for (let i = 0; i < x.length; i++){
+      if (x[i] > 0){
+        return true;
+      }
+    }
+    return false;
+  }
+  countPieces(){
+    this.countSmallPieces = 0;
+    this.shaps.forEach((e:any) => {
+      e.forEach((x: any) => {
+        x.forEach((y: any) => {
+          if (y > 0){
+            this.countSmallPieces++;
+          }
+        });
+      });
+    });
   }
 }

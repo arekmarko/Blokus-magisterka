@@ -12,14 +12,16 @@
             </div>
         </div>
     <div class="row p-3">
-        <div *ngFor="let r of rooms">
-            <hr class="solid">
-            <div class="col-8">
-                <p>{{r.roomName}}</p>
-                <p>{{r.users.length}}/4</p>
-            </div>
-            <div class="col text-end">
-                <button (click)="joinRoom(r)">Join</button>
+        <div class="listRoom">
+            <div *ngFor="let r of rooms">
+                <hr class="solid">
+                <div class="col-8">
+                    <p>{{r.roomName}}</p>
+                    <p>{{r.users.length}}/4</p>
+                </div>
+                <div class="col text-end">
+                    <button (click)="joinRoom(r)">Join</button>
+                </div>
             </div>
         </div>
         <div *ngIf="rooms?.length === 0">

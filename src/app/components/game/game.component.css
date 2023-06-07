@@ -1,3 +1,40 @@
+.navbar {
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.trapezoid{
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%);
+  height: 150px;
+  width: 250px;
+  background-color: #888;
+  clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);
+}
+.minibox {
+  background-color: #666;
+  border-radius: 4px;
+  border: 1px #111 solid;
+
+}
+.selectedPiece {
+  position: inherit;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+}
+
+.playerIndicator {
+  position: absolute;
+  top: 70px;
+  left: calc(50% - 250px);
+  text-align: center;
+}
+
 .example-box {
     width: 30px;
     height: 30px;
@@ -31,13 +68,19 @@
   .box {
     background-color: #14e;
     border-radius: 4px;
-    border: 5px #22ee solid;
+    border: 3px #22ee solid;
     height: 40px;
     width: 40px;
   }
+  /* .board {
+    position: absolute;
+    top: 170px;
+    left: 50%;
+    translate: -50%;
+  } */
   .plansza {
     aspect-ratio: 20/1;
-    width: 800px;
+    width: 750px;
     margin: auto;
   }
   .box-blue {
@@ -121,3 +164,88 @@
     /* background-color: #8fa; */
     box-shadow: rgba(136, 255, 170, 0.6) 5px 5px, rgba(136, 255, 170, 0.5) 10px 10px, rgba(136, 255, 170, 0.4) 15px 15px, rgba(136, 255, 170, 0.3) 20px 20px, rgba(136, 255, 170, 0.2) 25px 25px;
   }
+
+  .arrow-curved-left {
+    position: absolute;
+    top: 20px;
+    left: calc(50% - 150px);
+    width: 0;
+    height: 0;
+    border-top: 9px solid transparent;
+    border-right: 9px solid white;
+    transform: rotate(10deg) scale(-1,1);
+    cursor: pointer;
+  
+    &:after {
+      content: "";
+      position: absolute;
+      border: 0 solid transparent;
+      border-top: 3px solid white;
+      border-radius: 20px 0 0 0;
+      top: -12px;
+      left: -9px;
+      width: 12px;
+      height: 12px;
+      transform: rotate(45deg) scale(1,1);
+    }
+  }
+  
+  .bi {
+    cursor: pointer;
+    scale: 2;
+  }
+
+  .bi-arrow-clockwise {
+    position: absolute;
+    top: 20px;
+    left: calc(50% + 150px);
+  }
+
+  .bi-arrow-counterclockwise {
+    position: absolute;
+    top: 20px;
+    left: calc(50% - 150px);
+  }
+
+  .bi-symmetry-vertical {
+    position: absolute;
+    top: 20px;
+    left: calc(50% - 200px);
+  }
+
+  .bi-symmetry-horizontal {
+    position: absolute;
+    top: 20px;
+    left: calc(50% + 200px);
+  }
+
+  .bi-skip-forward-fill {
+    position: absolute;
+    top: 20px;
+    left: calc(50% + 250px);
+  }
+  
+.connectIndicator {
+  position: absolute;
+  top: 20px;
+  left: calc(50% - 250px);
+}
+
+.congratulations {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  z-index: 99;
+  text-align: center;
+  visibility: hidden;
+  animation: gratulations 6s;
+  text-shadow: #000 0px 0px 25px;
+}
+
+@keyframes gratulations {
+  0% {opacity: 0; top: 100%; visibility: visible;}
+  35% {opacity: 1; top: 50%;}
+  55% {opacity: 1; top: 50%;}
+  100% {opacity: 0; top: 0%;}
+}
