@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef, Component, ElementRef, HostBinding, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BLOCK_SIZE, COLS, ROWS, SHAPES } from 'src/app/constants';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { SocketioService } from 'src/app/services/socketio.service';
@@ -12,14 +12,17 @@ import { SocketioService } from 'src/app/services/socketio.service';
 export class GameComponent implements OnInit, OnDestroy {
 
   gameId: any;
+  players: any;
   room: any;
   name: any;
   myIndex: any;
+  playing: any;
   board!: number[][];
   tmpBoard!: number[][];
   isDragging: boolean = false;
   //selectedShape!: number[][];
   selectedShape = [[1,1], [1,1]];
+  xy: number[] = [0,0];
   coords: number[] = [0, 0];
   shaps: any = SHAPES.slice();
   canPlaceDown: boolean = false;
@@ -27,10 +30,16 @@ export class GameComponent implements OnInit, OnDestroy {
   currentPlayer: any;
   currentPlayerIndex: any;
   countSmallPieces = 89;
+  leftPieces: any;
+  standings = [0,1,2,3];
+  colors = ['#5af', '#f5a', '#8fa', '#ffa'];
 
-  constructor(private socketIoService: SocketioService, private route: ActivatedRoute, private auth: AuthenticationService) { }
+  constructor(private socketIoService: SocketioService, private route: ActivatedRoute, private auth: AuthenticationService, private router: Router) { }
+
+  @HostBinding("style.--playerColor") playerColor: string = '#888';
 
   ngOnInit(): void {
+    console.log(this.standings);
     this.play();
     this.auth.auth.authState.subscribe(() => {
       this.name = this.auth.name;
@@ -39,12 +48,27 @@ export class GameComponent implements OnInit, OnDestroy {
       this.socketIoService.gameStarted(this.gameId, this.board);
       this.socketIoService.watchBoard().subscribe((message: any) =>{
         this.board = message.board;
-        this.currentPlayer = message.player;
+        this.players = message.players;
+        this.players.forEach((p:any, index: any) => {
+          if (p==this.name) {
+            this.myIndex = index;
+            this.playerColor = this.colors[index];
+          }
+        })
+        this.currentPlayer = message.players[message.playerIndex];
         this.currentPlayerIndex = message.playerIndex;
         this.round = message.round;
+        this.leftPieces = message.leftPieces;
+        this.playing = message.playing;
+        this.check(this.xy[0],this.xy[1]);
+        this.sortPlayers();
+      });
+      this.socketIoService.isStarting().subscribe(() => {
+        console.log('Started new game');
+        this.play();
+        this.router.navigate(['/game', this.gameId]);
       });
     });
-    console.log(this.shaps);
   }
 
   ngOnDestroy(): void {
@@ -66,6 +90,39 @@ export class GameComponent implements OnInit, OnDestroy {
     this.gameId = this.route.snapshot.paramMap.get('id');
     this.board = this.getEmptyBoard();
     this.tmpBoard = this.getEmptyBoard();
+    this.shaps = SHAPES.slice();
+    this.countSmallPieces=89;
+  }
+
+  surrender() {
+    this.socketIoService.surrender(this.gameId, this.myIndex);
+  }
+
+  endGame() {
+    let r = false;
+    this.playing.forEach((e: any) => {
+      if (e==true){
+        r = true;
+      }
+    });
+    return r;
+  }
+
+  sortPlayers() {
+    var test = this.leftPieces.slice();
+    var len = test.length;
+    var indices = this.standings;
+    for (var i = 0; i < len; i++){
+      indices[i] = i;
+    }
+    indices.sort(function (a,b) {
+      return test[a] < test[b] ? -1 : test[a] > test[b] ? 1 : 0;
+    });
+    console.log(indices);
+  }
+
+  playAgain() {
+    this.socketIoService.startGame(this.gameId);
   }
 
 
@@ -76,6 +133,8 @@ export class GameComponent implements OnInit, OnDestroy {
     this.coords[1] = y;
   }
   check(x: any, y: any) {
+    this.xy[0] = x;
+    this.xy[1] = y;
     if (this.isDragging) {
       let tmpCanPlaceDown = true;
       let tmpCanConnect = false;
@@ -148,11 +207,9 @@ export class GameComponent implements OnInit, OnDestroy {
     return false;
   }
   canConnect(x: any, y: any) {
-    if (this.round==1){
-      if ((x==0 && y==0 && this.currentPlayerIndex==0) || (x==19 && y==19 && this.currentPlayerIndex==2) || (x==0 && y==19 && this.currentPlayerIndex==3) || (x==19 && y==0 && this.currentPlayerIndex==1)){
-        return true;
-      }
-    } 
+    if ((x==0 && y==0 && this.currentPlayerIndex==0) || (x==19 && y==19 && this.currentPlayerIndex==2) || (x==0 && y==19 && this.currentPlayerIndex==3) || (x==19 && y==0 && this.currentPlayerIndex==1)){
+      return true;
+    }
     if (x-1 >= 0 && y-1 >= 0){
       if (this.board[x-1][y-1] == this.currentPlayerIndex+1) {
         console.log('can connect');
@@ -229,7 +286,7 @@ export class GameComponent implements OnInit, OnDestroy {
   cancelRound() {
     if (this.name==this.currentPlayer){
       this.selectedShape = [];
-      this.socketIoService.placeDown(this.gameId, this.board);
+      this.socketIoService.placeDown(this.gameId, this.board, this.countSmallPieces);
     }
   }
 
@@ -248,8 +305,9 @@ export class GameComponent implements OnInit, OnDestroy {
       this.shaps.splice(index,1);
       this.selectedShape = [];
       this.countPieces();
-      this.socketIoService.placeDown(this.gameId, this.board);
+      this.socketIoService.placeDown(this.gameId, this.board, this.countSmallPieces);
       this.canPlaceDown = false;
+      this.sortPlayers();
     } else {
       console.log("You can't place it here");
     }

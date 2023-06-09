@@ -9,9 +9,8 @@ export class SocketioService {
 
   socket!: Socket;
   rooms: string[] = [];
-  url2: string = 'magblokus.azurewebsites.net:8080';
-  url: string = 'localhost:8080';
-  url1: string = 'https://mblokus-backend.web.app';
+  url1: string = 'localhost:8080';
+  url: string = '192.168.1.14:8080';
 
   constructor() { }
 
@@ -56,8 +55,11 @@ export class SocketioService {
   gameStarted(gameId: any, board: any) {
     this.socket.emit('gameStarted', {gameId: gameId, board: board});
   }
-  placeDown(gameId: any, board: any) {
-    this.socket.emit('newBoard', {gameId: gameId, board: board});
+  placeDown(gameId: any, board: any, smallPieces: any) {
+    this.socket.emit('newBoard', {gameId: gameId, board: board, smallPieces: smallPieces});
+  }
+  surrender(gameId: any, myIndex: any) {
+    this.socket.emit('surrender', {gameId: gameId, myIndex: myIndex});
   }
   watchBoard() {
     return new Observable((observer) => {

@@ -1,41 +1,74 @@
 <div class="overflow.hidden">
 
-<nav class="navbar navbar-light bg-secondary">
-    <div class="container">
-        <i class="connectIndicator bi bi-puzzle" [ngStyle]="{'color': canPlaceDown ? 'chartreuse' : 'red'}"></i>
-        <i class="bi bi-arrow-counterclockwise" (click)="rotateLeft(selectedShape)"></i>
-        <i class="bi bi-arrow-clockwise" (click)="rotateRight(selectedShape)"></i>
-        <i class="bi bi-symmetry-vertical" (click)="mirrorVertical(selectedShape)" title="Flip Vertical"></i>
-        <i class="bi bi-symmetry-horizontal" (click)="mirrorHorizontal(selectedShape)" title="Flip Horizontal"></i>
-        <i class="bi bi-skip-forward-fill" (click)="cancelRound()" title="Skip"></i>
-        <div class="trapezoid">
-            <div class="selectedPiece">
-                <div *ngFor="let x of selectedShape; let xi = index">
-                    <div *ngIf="checkRow(x)">
-                        <div class="row">
-                            <div *ngFor="let y of x; let yi = index" [ngClass]="{'minibox': y!=0}"
-                                style="width:26px; height:26px"></div>
+    <nav class="navbar navbar-light bg-secondary">
+        <div class="container">
+            <i class="connectIndicator bi bi-puzzle" title="Can connect?"
+                [ngStyle]="{'color': canPlaceDown ? 'chartreuse' : 'red'}"></i>
+            <i class="bi bi-arrow-counterclockwise" (click)="rotateLeft(selectedShape)"></i>
+            <i class="bi bi-arrow-clockwise" (click)="rotateRight(selectedShape)"></i>
+            <i class="bi bi-symmetry-vertical" (click)="mirrorVertical(selectedShape)" title="Flip Vertical"></i>
+            <i class="bi bi-symmetry-horizontal" (click)="mirrorHorizontal(selectedShape)" title="Flip Horizontal"></i>
+            <i class="bi bi-skip-forward-fill" title="Skip" data-bs-toggle="modal" data-bs-target="#skipTurn"></i>
+            <i class="bi bi-stop-fill" data-bs-toggle="modal" data-bs-target="#surrender" title="Surrender"></i>
+            <div class="trapezoid">
+                <div class="selectedPiece">
+                    <div *ngFor="let x of selectedShape; let xi = index">
+                        <div *ngIf="checkRow(x)">
+                            <div class="row">
+                                <div *ngFor="let y of x; let yi = index" [ngClass]="{'minibox': y!=0}"
+                                    style="width:26px; height:26px"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<div class="m-5 pt-5">
-    <p class="playerIndicator">Round {{round}} <br>player {{currentPlayerIndex + 1}}:<br>
-        <span style="color: chartreuse;">{{currentPlayer}}<br></span>Left pieces: {{countSmallPieces}}</p>
-    <div class="row justify-content-center">
-        <div class="col">
-
-        </div>
-        <div class="col-auto">
-            <div class="board mt-4">
-                <div *ngFor="let i of [].constructor(20); let xboard = index;">
-                    <div class="row plansza">
-                        <div class="col box-empty" *ngFor="let j of [].constructor(20); let yboard = index"
-                            (mouseenter)="check(xboard, yboard)" (click)="placeDown(xboard,yboard)" [ngStyle]="{'box-shadow': (xboard==0 && yboard==0) ? 'rgba(37, 194, 241, 0.6) -5px -5px, rgba(37, 194, 241, 0.5) -10px -10px, rgba(37, 194, 241, 0.4) -15px -15px, rgba(37, 194, 241, 0.3) -20px -20px, rgba(37, 194, 241, 0.2) -25px -25px' :
+    <div class="m-5 pt-5">
+        <p class="playerIndicator">Left pieces: <span style="color: chartreuse;">{{leftPieces[myIndex]}}</span></p>
+        <div class="row justify-content-center">
+            <div class="col-xl text-primary" style="height: 800px;">
+                <div class="row" style="height: 200px;">
+                    <div class="col card m-3" [ngClass]="{'card-0': currentPlayerIndex==0}"
+                        [ngStyle]="{'opacity' : playing[0] ? '100%' : '20%'}">
+                        <h1 class="display-5 align-self-center"><span style="color: cyan">{{players[0]}}</span></h1>
+                        <p>Left pieces: {{leftPieces[0]}}</p>
+                        
+                    </div>
+                </div>
+                <div class="row" style="height: 200px;">
+                    <div class="col card m-3" [ngClass]="{'card-1': currentPlayerIndex==1}"
+                        [ngStyle]="{'opacity' : playing[1] ? '100%' : '20%'}">
+                        <h1 class="display-5 align-self-center"><span style="color: red">{{players[1]}}</span></h1>
+                        <p>Left pieces: {{leftPieces[1]}}</p>
+                       
+                    </div>
+                </div>
+                <div class="row" style="height: 200px;">
+                    <div class="col card m-3" [ngClass]="{'card-2': currentPlayerIndex==2}"
+                        [ngStyle]="{'opacity' : playing[2] ? '100%' : '20%'}">
+                        <h1 class="display-5 align-self-center"><span style="color: chartreuse">{{players[2]}}</span>
+                        </h1>
+                        <p>Left pieces: {{leftPieces[2]}}</p>
+                        
+                    </div>
+                </div>
+                <div class="row" style="height: 200px;">
+                    <div class="col card m-3" [ngClass]="{'card-3': currentPlayerIndex==3}"
+                        [ngStyle]="{'opacity' : playing[3] ? '100%' : '20%'}">
+                        <h1 class="display-5 align-self-center"><span style="color: yellow">{{players[3]}}</span></h1>
+                        <p>Left pieces: {{leftPieces[3]}}</p>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="board my-4">
+                    <div *ngFor="let i of [].constructor(20); let xboard = index;">
+                        <div class="row plansza">
+                            <div class="col box-empty" *ngFor="let j of [].constructor(20); let yboard = index"
+                                (mouseenter)="check(xboard, yboard)" (click)="placeDown(xboard,yboard)" [ngStyle]="{'box-shadow': (xboard==0 && yboard==0) ? 'rgba(37, 194, 241, 0.6) -5px -5px, rgba(37, 194, 241, 0.5) -10px -10px, rgba(37, 194, 241, 0.4) -15px -15px, rgba(37, 194, 241, 0.3) -20px -20px, rgba(37, 194, 241, 0.2) -25px -25px' :
                         ((xboard==0 && yboard==19) ? 'rgba(255, 255, 170, 0.6) 5px -5px, rgba(255, 255, 170, 0.5) 10px -10px, rgba(255, 255, 170, 0.4) 15px -15px, rgba(255, 255, 170, 0.3) 20px -20px, rgba(255, 255, 170, 0.2) 25px -25px' : 
                         ((xboard==19 && yboard==0) ? 'rgba(240, 46, 170, 0.6) -5px 5px, rgba(240, 46, 170, 0.5) -10px 10px, rgba(240, 46, 170, 0.4) -15px 15px, rgba(240, 46, 170, 0.3) -20px 20px, rgba(240, 46, 170, 0.2) -25px 25px' : 
                         ((xboard==19 && yboard==19) ? 'rgba(136, 255, 170, 0.6) 5px 5px, rgba(136, 255, 170, 0.5) 10px 10px, rgba(136, 255, 170, 0.4) 15px 15px, rgba(136, 255, 170, 0.3) 20px 20px, rgba(136, 255, 170, 0.2) 25px 25px' : 
@@ -44,70 +77,107 @@
                         (board[xboard][yboard]==3 ? 'box-green' : 
                         (board[xboard][yboard]==4 ? 'box-yellow' :
                         (tmpBoard[xboard][yboard]>0 ? 'box-tmp' : ''))))">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="mx-3 p-3 rounded border border-primary" style="height: 800px; min-width: 170px">
-                <div class="row row-cols-auto">
-                    <div *ngFor="let s of shaps" class="col m-2">
-                        <div class="shape" cdkDrag>
-                            <div *ngFor="let x of s; let xi = index">
-                                <div *ngIf="checkRow(x)">
-                                    <div class="row">
-                                        <div *ngFor="let y of x; let yi = index"
-                                            [ngStyle]="{'border': (selectedShape==s && y!=0) ? 'null' : 'null'}"
-                                            [ngClass]="{'box': y!=0}" style="height:30px; width: 30px;"
-                                            (mousedown)="selectShape(s,xi,yi)">
+            <div class="col-xl">
+                <div class="piecesArea m-4 p-3 rounded " style="border: 1px solid var(--playerColor)">
+                    <div class="row row-cols-auto">
+                        <div *ngFor="let s of shaps" class="col m-2">
+                            <div class="shape" cdkDrag>
+                                <div *ngFor="let x of s; let xi = index">
+                                    <div *ngIf="checkRow(x)">
+                                        <div class="row">
+                                            <div *ngFor="let y of x; let yi = index"
+                                                [ngStyle]="{'border': (selectedShape==s && y!=0) ? 'null' : 'null'}"
+                                                [ngClass]="(myIndex+1)==1 && y>0 ? 'minibox-blue' : 
+                                            ((myIndex+1)==2 && y>0 ? 'minibox-red' : 
+                                            ((myIndex+1)==3 && y>0 ? 'minibox-green' : 
+                                            ((myIndex+1)==4 && y>0 ? 'minibox-yellow' :
+                                            (y>0 ? 'minibox' : ''))))" style="height:30px; width: 30px;"
+                                                (mousedown)="selectShape(s,xi,yi)">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <p *ngIf="countSmallPieces==0">Wykorzystałeś już wszystkie klocki!</p>
                 </div>
-                <p *ngIf="countSmallPieces==0">Wykorzystałeś już wszystkie klocki!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="congratulations" *ngIf="countSmallPieces==0">
+        <h1 class="display-1 abc">Gratulacje!</h1>
+        <p class="display-6">Pozbyłeś się wszystkich klocków!</p>
+    </div>
+
+    <div class="scoreboard" *ngIf="!endGame()">
+        <h1 class="display-1 abc">Gratulacje!</h1>
+        <p class="display-6">Koniec gry.</p>
+        <div class="row justify-content-center">
+            <div class="col">
+                <i class="bi bi-2-circle" style="font-size: 60px; color:silver"></i>
+                <h4>{{players[standings[1]]}}</h4>
+                <p>Pozostałych klocków: <span style="color: chartreuse">{{leftPieces[standings[1]]}}</span></p>
+            </div>
+            <div class="col-auto">
+                <i class="bi bi-1-circle" style="font-size: 90px; color:gold"></i>
+                <h2>{{players[standings[0]]}}</h2>
+                <p>Pozostałych klocków: <span style="color: chartreuse">{{leftPieces[standings[0]]}}</span></p>
+            </div>
+            <div class="col">
+                <i class="bi bi-3-circle" style="font-size: 60px; color:brown"></i>
+                <h4>{{players[standings[2]]}}</h4>
+                <p>Pozostałych klocków: <span style="color: chartreuse">{{leftPieces[standings[2]]}}</span></p>
+            </div>
+        </div>
+        <div class="row px-5">
+            <button class="button col mx-5" routerLink="/">Strona główna</button>
+            <button class="button col mx-5" (click)="playAgain()">Zagraj ponownie</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal text-dark" id="skipTurn" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Skip turn</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to skip your turn?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn" style="background-color: chartreuse;" data-bs-dismiss="modal"
+                    (click)="cancelRound()">Skip</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="congratulations" *ngIf="countSmallPieces==0">
-    <h1 class="display-1">Gratulacje</h1>
-    <p class="display-6">Pozbyłeś się wszystkich klocków!</p>
-</div>
-
-<!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom"
-    aria-controls="offcanvasBottom">Toggle bottom offcanvas</button> -->
-<p *ngFor="let user of room?.users; let i = index"
-    [ngStyle]="{'color': i==0 ? 'blue' : (i==1 ? 'red' : (i==2 ? 'green' : 'yellow'))}">{{user}}<span
-        *ngIf="name==currentPlayer && name==user"> (you)</span></p>
-
-<div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasBottomLabel">Offcanvas bottom</h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body small">
-        <div class="m-3 p-3 rounded border border-primary">
-            <div class="row row-cols-auto">
-                <div *ngFor="let s of shaps" class="col m-2">
-                    <div class="shape" cdkDrag>
-                        <div *ngFor="let x of s; let xi = index">
-                            <div class="row">
-                                <div *ngFor="let y of x; let yi = index"
-                                    [ngStyle]="{'border': (selectedShape==s && y!=0) ? 'null' : 'null'}"
-                                    [ngClass]="{'box': y!=0}" style="height:40px; width: 40px;"
-                                    (mousedown)="selectShape(s,xi,yi)" data-bs-dismiss="offcanvas">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<div class="modal text-dark" id="surrender" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Surrender</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to surrender?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                    (click)="surrender()">Surrender</button>
             </div>
         </div>
     </div>
-</div>
 </div>
