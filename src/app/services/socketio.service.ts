@@ -10,7 +10,8 @@ export class SocketioService {
   socket!: Socket;
   rooms: string[] = [];
   url1: string = 'localhost:8080';
-  url: string = '192.168.1.14:8080';
+  url2: string = '192.168.1.22:8080';
+  url: string = 'https://magblokus.azurewebsites.net:443';
 
   constructor() { }
 
@@ -30,7 +31,6 @@ export class SocketioService {
     return new Observable((observer) =>{
       this.socket.on('roomList', rooms => {
       observer.next(rooms);
-      console.log(rooms);
     })
   })
   }
@@ -55,8 +55,8 @@ export class SocketioService {
   gameStarted(gameId: any, board: any) {
     this.socket.emit('gameStarted', {gameId: gameId, board: board});
   }
-  placeDown(gameId: any, board: any, smallPieces: any) {
-    this.socket.emit('newBoard', {gameId: gameId, board: board, smallPieces: smallPieces});
+  placeDown(gameId: any, board: any, smallPieces: any, pieceIndex: any) {
+    this.socket.emit('newBoard', {gameId: gameId, board: board, smallPieces: smallPieces, pieceIndex: pieceIndex});
   }
   surrender(gameId: any, myIndex: any) {
     this.socket.emit('surrender', {gameId: gameId, myIndex: myIndex});
@@ -71,7 +71,29 @@ export class SocketioService {
   addBot(gameId: any) {
     this.socket.emit('addBot', {gameId: gameId});
   }
+  removeBot(gameId: any) {
+    this.socket.emit('removeBot', {gameId: gameId});
+  }
   leaveRoom(gameId: any, username: any) {
     this.socket.emit('leaveRoom', {gameId: gameId, username: username});
   }
+  leaveGame(gameId: any){
+    this.socket.emit('leaveGame', {gameId: gameId});
+  }
+  leavingGame() {
+    return new Observable((observer) => {
+      this.socket.on('leaveGame', (message) => {
+        observer.next(message);
+      })
+    });
+  }
+  getStats(username: any) {
+    this.socket.emit('getStats', {username: username});
+    return new Observable((observer) => {
+      this.socket.on('getStats', (message) => {
+        observer.next(message);
+      })
+    });
+  }
+
 }

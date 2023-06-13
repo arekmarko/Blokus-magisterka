@@ -1,15 +1,14 @@
 <div class="overflow.hidden">
-
-    <nav class="navbar navbar-light bg-secondary">
+    <nav class="navbar navbar-light mb-5">
         <div class="container">
-            <i class="connectIndicator bi bi-puzzle" title="Can connect?"
+            <i class="connectIndicator bi bi-puzzle" title="Można połączyć?"
                 [ngStyle]="{'color': canPlaceDown ? 'chartreuse' : 'red'}"></i>
-            <i class="bi bi-arrow-counterclockwise" (click)="rotateLeft(selectedShape)"></i>
-            <i class="bi bi-arrow-clockwise" (click)="rotateRight(selectedShape)"></i>
-            <i class="bi bi-symmetry-vertical" (click)="mirrorVertical(selectedShape)" title="Flip Vertical"></i>
-            <i class="bi bi-symmetry-horizontal" (click)="mirrorHorizontal(selectedShape)" title="Flip Horizontal"></i>
-            <i class="bi bi-skip-forward-fill" title="Skip" data-bs-toggle="modal" data-bs-target="#skipTurn"></i>
-            <i class="bi bi-stop-fill" data-bs-toggle="modal" data-bs-target="#surrender" title="Surrender"></i>
+            <i class="bi bi-arrow-counterclockwise" (click)="rotateLeft(selectedShape)" title="Obróć w lewo"></i>
+            <i class="bi bi-arrow-clockwise" (click)="rotateRight(selectedShape)" title="Obróć w prawo"></i>
+            <i class="bi bi-symmetry-vertical" (click)="mirrorVertical(selectedShape)" title="Odwróć pionowo"></i>
+            <i class="bi bi-symmetry-horizontal" (click)="mirrorHorizontal(selectedShape)" title="Odwróć poziomo"></i>
+            <i class="bi bi-skip-forward-fill" title="Pomiń kolejkę" data-bs-toggle="modal" data-bs-target="#skipTurn"></i>
+            <i class="bi bi-stop-fill" data-bs-toggle="modal" data-bs-target="#surrender" title="Poddaj się"></i>
             <div class="trapezoid">
                 <div class="selectedPiece">
                     <div *ngFor="let x of selectedShape; let xi = index">
@@ -25,52 +24,50 @@
         </div>
     </nav>
 
-    <div class="m-5 pt-5">
-        <p class="playerIndicator">Left pieces: <span style="color: chartreuse;">{{leftPieces[myIndex]}}</span></p>
+    <div class="mx-3" style="margin-top: 125px;">
+        <!-- <p class="playerIndicator">Left pieces: <span style="color: chartreuse;">{{leftPieces[myIndex]}}</span></p> -->
         <div class="row justify-content-center">
-            <div class="col-xl text-primary" style="height: 800px;">
-                <div class="row" style="height: 200px;">
-                    <div class="col card m-3" [ngClass]="{'card-0': currentPlayerIndex==0}"
+            <div class="col-xl-3 text-primary">
+                <div class="row">
+                    <div class="col col-lg-12 card m-3" 
+                        style="height: 175px;"
+                        [ngClass]="{'card-0': currentPlayerIndex==0}"
                         [ngStyle]="{'opacity' : playing[0] ? '100%' : '20%'}">
-                        <h1 class="display-5 align-self-center"><span style="color: cyan">{{players[0]}}</span></h1>
-                        <p>Left pieces: {{leftPieces[0]}}</p>
-                        
+                        <h1 class="display-6 align-self-center"><span style="color: cyan">{{players[0]}}</span></h1>
+                        <p>Pozostałe elementy: {{leftPieces[0]}}</p>
                     </div>
-                </div>
-                <div class="row" style="height: 200px;">
-                    <div class="col card m-3" [ngClass]="{'card-1': currentPlayerIndex==1}"
+                    <div class="col col-lg-12 card m-3" 
+                        style="height: 175px;"
+                        [ngClass]="{'card-1': currentPlayerIndex==1}"
                         [ngStyle]="{'opacity' : playing[1] ? '100%' : '20%'}">
-                        <h1 class="display-5 align-self-center"><span style="color: red">{{players[1]}}</span></h1>
-                        <p>Left pieces: {{leftPieces[1]}}</p>
-                       
+                        <h1 class="display-6 align-self-center"><span style="color: red">{{players[1]}}</span></h1>
+                        <p>Pozostałe elementy: {{leftPieces[1]}}</p>
                     </div>
-                </div>
-                <div class="row" style="height: 200px;">
-                    <div class="col card m-3" [ngClass]="{'card-2': currentPlayerIndex==2}"
+                    <div class="col col-lg-12 card m-3" 
+                        style="height: 175px;"
+                        [ngClass]="{'card-2': currentPlayerIndex==2}"
                         [ngStyle]="{'opacity' : playing[2] ? '100%' : '20%'}">
-                        <h1 class="display-5 align-self-center"><span style="color: chartreuse">{{players[2]}}</span>
+                        <h1 class="display-6 align-self-center"><span style="color: chartreuse">{{players[2]}}</span>
                         </h1>
-                        <p>Left pieces: {{leftPieces[2]}}</p>
-                        
+                        <p>Pozostałe elementy: {{leftPieces[2]}}</p>
                     </div>
-                </div>
-                <div class="row" style="height: 200px;">
-                    <div class="col card m-3" [ngClass]="{'card-3': currentPlayerIndex==3}"
+                    <div class="col col-lg-12 card m-3" 
+                        style="height: 175px;"
+                        [ngClass]="{'card-3': currentPlayerIndex==3}"
                         [ngStyle]="{'opacity' : playing[3] ? '100%' : '20%'}">
-                        <h1 class="display-5 align-self-center"><span style="color: yellow">{{players[3]}}</span></h1>
-                        <p>Left pieces: {{leftPieces[3]}}</p>
-                        
+                        <h1 class="display-6 align-self-center"><span style="color: yellow">{{players[3]}}</span></h1>
+                        <p>Pozostałe elementy: {{leftPieces[3]}}</p>
                     </div>
                 </div>
             </div>
-            <div class="col-auto">
-                <div class="board my-4">
+            <div class="col">
+                <div class="board m-3">
                     <div *ngFor="let i of [].constructor(20); let xboard = index;">
                         <div class="row plansza">
                             <div class="col box-empty" *ngFor="let j of [].constructor(20); let yboard = index"
                                 (mouseenter)="check(xboard, yboard)" (click)="placeDown(xboard,yboard)" [ngStyle]="{'box-shadow': (xboard==0 && yboard==0) ? 'rgba(37, 194, 241, 0.6) -5px -5px, rgba(37, 194, 241, 0.5) -10px -10px, rgba(37, 194, 241, 0.4) -15px -15px, rgba(37, 194, 241, 0.3) -20px -20px, rgba(37, 194, 241, 0.2) -25px -25px' :
                         ((xboard==0 && yboard==19) ? 'rgba(255, 255, 170, 0.6) 5px -5px, rgba(255, 255, 170, 0.5) 10px -10px, rgba(255, 255, 170, 0.4) 15px -15px, rgba(255, 255, 170, 0.3) 20px -20px, rgba(255, 255, 170, 0.2) 25px -25px' : 
-                        ((xboard==19 && yboard==0) ? 'rgba(240, 46, 170, 0.6) -5px 5px, rgba(240, 46, 170, 0.5) -10px 10px, rgba(240, 46, 170, 0.4) -15px 15px, rgba(240, 46, 170, 0.3) -20px 20px, rgba(240, 46, 170, 0.2) -25px 25px' : 
+                        ((xboard==19 && yboard==0) ? 'rgba(235, 50, 50,0.6) -5px 5px, rgba(235, 50, 50,0.5) -10px 10px, rgba(235, 50, 50,0.4) -15px 15px, rgba(235, 50, 50,0.3) -20px 20px, rgba(235, 50, 50,0.2) -25px 25px' : 
                         ((xboard==19 && yboard==19) ? 'rgba(136, 255, 170, 0.6) 5px 5px, rgba(136, 255, 170, 0.5) 10px 10px, rgba(136, 255, 170, 0.4) 15px 15px, rgba(136, 255, 170, 0.3) 20px 20px, rgba(136, 255, 170, 0.2) 25px 25px' : 
                         '')))}" [ngClass]="board[xboard][yboard]==1 ? 'box-blue' : 
                         (board[xboard][yboard]==2 ? 'box-red' : 
@@ -82,11 +79,11 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl">
+            <div class="col-xl-3 col">
                 <div class="piecesArea m-4 p-3 rounded " style="border: 1px solid var(--playerColor)">
                     <div class="row row-cols-auto">
                         <div *ngFor="let s of shaps" class="col m-2">
-                            <div class="shape" cdkDrag>
+                            <div class="shape">
                                 <div *ngFor="let x of s; let xi = index">
                                     <div *ngIf="checkRow(x)">
                                         <div class="row">
@@ -111,9 +108,13 @@
         </div>
     </div>
 
-    <div class="congratulations" *ngIf="countSmallPieces==0">
+    <div class="congratulations" *ngIf="countSmallPieces==0 && endGame()">
         <h1 class="display-1 abc">Gratulacje!</h1>
         <p class="display-6">Pozbyłeś się wszystkich klocków!</p>
+    </div>
+
+    <div class="yourTurn" *ngIf="name==currentPlayer">
+        <h1 class="display-1">Twoja tura!</h1>
     </div>
 
     <div class="scoreboard" *ngIf="!endGame()">
@@ -137,7 +138,7 @@
             </div>
         </div>
         <div class="row px-5">
-            <button class="button col mx-5" routerLink="/">Strona główna</button>
+            <button class="button col mx-5" (click)="leaveGame()">Strona główna</button>
             <button class="button col mx-5" (click)="playAgain()">Zagraj ponownie</button>
         </div>
     </div>
@@ -148,16 +149,16 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Skip turn</h5>
+                <h5 class="modal-title">Pomiń kolejkę</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to skip your turn?</p>
+                <p>Czy na pewno chcesz pominąć swoją kolej?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
                 <button type="button" class="btn" style="background-color: chartreuse;" data-bs-dismiss="modal"
-                    (click)="cancelRound()">Skip</button>
+                    (click)="cancelRound()">Pomiń</button>
             </div>
         </div>
     </div>
@@ -167,16 +168,16 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Surrender</h5>
+                <h5 class="modal-title">Poddaj się</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to surrender?</p>
+                <p>Czy na pewno chcesz się poddać? Nie będziesz mógł już położyć więcej elementów.</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
-                    (click)="surrender()">Surrender</button>
+                    (click)="surrender()">Poddaj się</button>
             </div>
         </div>
     </div>

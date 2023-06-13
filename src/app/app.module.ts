@@ -16,6 +16,7 @@ import { environment } from '../environments/environment';
 import { AngularFireModule } from '@angular/fire/compat';
 import { FormsModule } from '@angular/forms';
 import { AuthenticationService } from './services/auth/authentication.service';
+import { AccountComponent } from './components/account/account.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { AuthenticationService } from './services/auth/authentication.service';
     GameComponent,
     HomepageComponent,
     SelectRoomComponent,
+    AccountComponent,
   ],
   imports: [
     BrowserModule,

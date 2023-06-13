@@ -36,4 +36,18 @@ h3 {
 }
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { 
+    margin: 0; 
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+[data-letters]:before {
+    content:attr(data-letters);
+    display:inline-block;
+    font-size:65px;
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    background:plum;
+    color:white;
+    }

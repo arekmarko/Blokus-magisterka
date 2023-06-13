@@ -6,7 +6,7 @@
 hr {
     border-top: 1px solid #2e2;
 }
-button {
+#button {
     border: 1px solid #eee;
     color: #eee;
     background-color: #111;
@@ -17,7 +17,7 @@ button {
     margin-bottom: 15px;
     transition: 0.5s ease-in-out;
 }
-button:hover {
+#button:hover {
     color: #111;
     background-color: #eee;
 }   
@@ -29,7 +29,4 @@ button:hover {
     color: #111;
     background-color: #2e2;
     border-color: #2e2;
-}
-.listRoom {
-    
 }

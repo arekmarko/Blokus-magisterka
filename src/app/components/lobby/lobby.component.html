@@ -1,17 +1,23 @@
 <div class="container">
+    <h2>Witaj w pokoju <span style="color:chartreuse">{{room?.roomName}}</span>!</h2>
 
-    <h2>Welcome to <span style="color:chartreuse">{{room.roomName}}</span> room!</h2>
     <div class="row">
-        <div class="container card col">
-            <p>sdf</p>
-        </div>
-        <div class="col-3">
-            <div class="container card" *ngIf="room">
-                <a *ngFor="let p of room.users">{{p}}</a>
-            </div>
+        <div class="col-12 card m-3" *ngFor="let p of room.users">
+            <h1 class="display-6 align-self-center"><span style="color: chartreuse">{{p}}</span></h1>
         </div>
     </div>
-    <p>{{username}}</p>
-    <button class="button greenbutton" (click)="startGame()">Start game</button>
-    <button class="button greenbutton" (click)="addBot()">Add bot</button>
+
+    <div class="card" style="scale:0.8; position:fixed; bottom:0px; left: 50%; translate: -50%;">
+        <p class="display-6 text-center pt-3 mb-0">Gracze: <span [ngStyle]="{color: (room.users.length==4) ? 'chartreuse' : 'red'}">{{room.users.length}}</span>/4</p>
+        <div class="row">
+            <button class="col button greenbutton" [disabled]="room.users.length<4" (click)="startGame()">Rozpocznij grę</button>
+        </div>
+        <div class="row">
+            <button class="col button greenbutton" (click)="addBot()">Dodaj CPU</button>
+            <button class="col button greenbutton" (click)="removeBot()">Usuń CPU</button>
+        </div>
+        <div class="row">
+            <button class="col button greenbutton" routerLink="/select-room">Powrót</button>
+        </div>
+    </div>
 </div>

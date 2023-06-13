@@ -5,12 +5,14 @@ import { AppComponent } from './app.component';
 import { HomepageComponent } from './components/homepage/homepage.component';
 import { SelectRoomComponent } from './components/select-room/select-room.component';
 import { GameComponent } from './components/game/game.component';
+import { AccountComponent } from './components/account/account.component';
 
 const routes: Routes = [
   {path: '', component: HomepageComponent},
   {path: 'lobby/:id', component: LobbyComponent},
   {path: 'select-room', component: SelectRoomComponent},
   {path: 'game/:id', component:GameComponent},
+  {path: 'account/:id', component:AccountComponent},
 ];
 
 @NgModule({

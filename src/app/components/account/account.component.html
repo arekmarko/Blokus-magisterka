@@ -1,0 +1,73 @@
+<div class="container rounded p-5 my-5" style="border: solid 1px chartreuse;">
+    <button class="btn" style="color: chartreuse;" routerLink="/"><i class="bi bi-chevron-left"></i> Wróć</button>
+    <h3 class="display-5">Statystyki gracza <span class="display-3" style="color: chartreuse;">{{username}}</span></h3>
+    <div class="card p-3 m-3">
+        <div class="row text-center">
+            <div class="col-lg" style="height: 150px;">
+                <h5 class="display-6 fs-4">Rozegrane gry</h5>
+                <div [attr.value]="gamesPlayed" class="progress-bar gamesPlayed mx-auto my-2">
+                    <progress id="wins" min="0" max="{{gamesPlayed}}" value="{{gamesPlayed}}"
+                        style="visibility:hidden;height:0;width:0;"></progress>
+                </div>
+            </div>
+            <div class="col-lg" style="height: 150px;">
+                <h5 class="display-6 fs-4">Wygrane gry</h5>
+                <div [attr.value]="wins" class="progress-bar wins mx-auto my-2"
+                [ngStyle]="{'background': true ? winsBackground : ''}">
+                    <progress id="wins" min="0" max="{{gamesPlayed}}" value="{{wins}}"
+                        style="visibility:hidden;height:0;width:0;"></progress>
+                </div>
+            </div>
+            <div class="col-lg" style="height: 150px;">
+                <h5 class="display-6 fs-4">Wykorzystane wszystkie elementy</h5>
+                <div [attr.value]="zeroPieces" class="progress-bar zeroPieces mx-auto my-2"
+                [ngStyle]="{'background': true ? zeroPiecesBackground : ''}">
+                    <progress id="wins" min="0" max="{{gamesPlayed}}" value="{{zeroPieces}}"
+                        style="visibility:hidden;height:0;width:0;"></progress>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3 m-3">
+        <div class="row text-center">
+            <div class="col-lg" style="height: 150px;">
+                <h5 class="display-6 fs-4">Średnia ilość pozostałych elementów</h5>
+                <div [attr.value]="avgPieces" class="progress-bar leftPiecesGamesPlayed mx-auto my-2"
+                [ngStyle]="{'background': true ? leftPiecesGamesPlayedBackground : ''}">
+                    <progress id="wins" min="0" max="{{gamesPlayed}}" value="{{avgPieces}}"
+                        style="visibility:hidden;height:0;width:0;"></progress>
+                </div>
+            </div>
+            <div class="col-lg position-relative" style="height: 200px;">
+                <h5 class="display-6 fs-4">Najrzadziej używany element</h5>
+                <h5 class="display-6 fs-6">Nieużyty <span class="fs-4" style="color: chartreuse">{{leastUsedValue}}</span> raz<span *ngIf="leastUsedValue>1">y</span></h5>
+                <div class="shape">
+                    <div *ngFor="let x of leastUsed; let xi = index">
+                        <div *ngIf="checkRow(x)">
+                            <div class="row justify-content-center">
+                                <div *ngFor="let y of x; let yi = index" [ngClass]="(y>0 ? 'minibox' : '')"
+                                    style="height:30px; width: 30px;" >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg position-relative" style="height: 200px;">
+                <h5 class="display-6 fs-4">Najczęściej używany przy rozpoczęciu</h5>
+                <h5 class="display-6 fs-6">Wykorzystany <span class="fs-4" style="color: chartreuse">{{beginsWithValue}}</span> raz<span *ngIf="beginsWithValue>1">y</span></h5>
+                <div class="shape">
+                    <div *ngFor="let x of beginsWith; let xi = index">
+                        <div *ngIf="checkRow(x)">
+                            <div class="row justify-content-center">
+                                <div *ngFor="let y of x; let yi = index" [ngClass]="(y>0 ? 'minibox' : '')"
+                                    style="height:30px; width: 30px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

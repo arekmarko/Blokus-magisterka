@@ -1,0 +1,43 @@
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    backdrop-filter: blur(5.5px);
+    -webkit-backdrop-filter: blur(5.5px);
+    border: 1px solid rgba(255, 255, 255, 0.29);
+    color: white;
+}
+
+.minibox {
+    background-color: #666;
+    border-radius: 4px;
+    border: 1px #111 solid;
+}
+
+.progress-bar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    color: white;
+    animation: progress 2s 1 forwards;
+}
+
+.gamesPlayed {
+    background: radial-gradient(closest-side, #333 77%, transparent 80% 100%),
+        conic-gradient(chartreuse calc(100%), green 0);
+}
+
+.gamesPlayed::before {
+    content: attr(value);
+}
+
+.wins::before {
+    content: attr(value);
+}
+
+.zeroPieces::before {
+    content: attr(value);
+}
+
+.leftPiecesGamesPlayed::before {
+    content: attr(value);
+}

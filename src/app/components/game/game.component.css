@@ -1,20 +1,23 @@
 .navbar {
   height: 60px;
-  position: sticky;
+  width: 100%;
+  position: fixed;
   top: 0;
   z-index: 100;
+  background-color: #666;
 }
 
 .trapezoid{
   position: absolute;
+  translate: -50% -10%;
+  scale: 0.8;
   left: 50%;
   top: 0;
-  transform: translate(-50%);
   height: 150px;
   width: 250px;
   background-color: #888;
-  clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);
-  border-bottom: var(--playerColor) 10px double;
+  clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%);
+  border-bottom: var(--playerColor) 5px double;
 }
 .minibox {
   background-color: #666;
@@ -51,9 +54,15 @@
     height: 40px;
     width: 40px;
   }
+  .board {
+    padding-right: 25px;
+    min-width: 560px;
+  }
   .plansza {
     aspect-ratio: 20/1;
-    width: 750px;
+    max-height: calc(80vh/20);
+    /* min-width: 550px; */
+    /* width: 750px; */
     margin: auto;
   }
   .minibox-blue {
@@ -78,19 +87,19 @@
     z-index: 1;
   }
   .minibox-red {
-    background-color: rgba(240, 46, 170, 0.8);
+    background-color: rgba(235, 50, 50, 0.8);
     border-radius: 4px;
-    border: rgba(240, 46, 170, 0.6) 2px solid;
+    border: rgba(255,50,50, 0.6) 2px solid;
   }
   .box-red {
-    background-color: rgba(240, 46, 170, 0.6);
+    background-color: rgb(235, 50, 50,0.6);
     border-radius: 4px;
     position: relative;
   }
   .box-red::before {
     content: '';
     position: absolute;
-    background: rgba(240, 46, 170, 0.8);
+    background: rgba(235,50,50, 0.8);
     top: 4px;
     left: 4px;
     right: 4px;
@@ -146,7 +155,7 @@
   }
   .red-corner {
     /* background-color: #f5a; */
-    box-shadow: rgba(240, 46, 170, 0.6) -5px 5px, rgba(240, 46, 170, 0.5) -10px 10px, rgba(240, 46, 170, 0.4) -15px 15px, rgba(240, 46, 170, 0.3) -20px 20px, rgba(240, 46, 170, 0.2) -25px 25px;
+    box-shadow: rgba(235, 50, 50,0.6) -5px 5px, rgba(235, 50, 50,0.5) -10px 10px, rgba(235, 50, 50,0.4) -15px 15px, rgba(235, 50, 50,0.3) -20px 20px, rgba(235, 50, 50,0.2) -25px 25px;
   }
   .yellow-corner {
     /* background-color: #ffa; */
@@ -158,70 +167,46 @@
     box-shadow: rgba(136, 255, 170, 0.6) 5px 5px, rgba(136, 255, 170, 0.5) 10px 10px, rgba(136, 255, 170, 0.4) 15px 15px, rgba(136, 255, 170, 0.3) 20px 20px, rgba(136, 255, 170, 0.2) 25px 25px;
   }
 
-  .arrow-curved-left {
-    position: absolute;
-    top: 20px;
-    left: calc(50% - 150px);
-    width: 0;
-    height: 0;
-    border-top: 9px solid transparent;
-    border-right: 9px solid white;
-    transform: rotate(10deg) scale(-1,1);
-    cursor: pointer;
-  
-    &:after {
-      content: "";
-      position: absolute;
-      border: 0 solid transparent;
-      border-top: 3px solid white;
-      border-radius: 20px 0 0 0;
-      top: -12px;
-      left: -9px;
-      width: 12px;
-      height: 12px;
-      transform: rotate(45deg) scale(1,1);
-    }
-  }
   
   .navbar .bi {
     cursor: pointer;
-    scale: 2;
+    scale: 1.8;
   }
 
   .bi-arrow-clockwise {
     position: absolute;
     top: 20px;
-    left: calc(50% + 150px);
+    left: calc(50% + 110px);
   }
 
   .bi-arrow-counterclockwise {
     position: absolute;
     top: 20px;
-    left: calc(50% - 150px);
+    left: calc(50% - 125px);
   }
 
   .bi-symmetry-vertical {
     position: absolute;
     top: 20px;
-    left: calc(50% - 200px);
+    left: calc(50% - 175px);
   }
 
   .bi-symmetry-horizontal {
     position: absolute;
     top: 20px;
-    left: calc(50% + 200px);
+    left: calc(50% + 160px);
   }
 
   .bi-skip-forward-fill {
     position: absolute;
     top: 20px;
-    left: calc(50% + 250px);
+    left: calc(50% + 210px);
   }
 
   .bi-stop-fill {
     position: absolute;
     top: 20px;
-    left: calc(50% + 300px);
+    left: calc(50% + 260px);
     scale: 2.5;
     color: red;
   }
@@ -229,11 +214,11 @@
 .connectIndicator {
   position: absolute;
   top: 20px;
-  left: calc(50% - 250px);
+  left: calc(50% - 225px);
 }
 
 .piecesArea {
-  height: 750px; 
+  height: 785px;
   overflow-y: auto;
   overflow-x: auto;
 }
@@ -248,7 +233,7 @@ color: white;
 
 
 .card-0{box-shadow: inset -10px -10px 20px 0px rgba(37, 194, 241, 0.6), inset 10px 10px 20px 0px rgba(37, 194, 241, 0.6);}
-.card-1{box-shadow: inset -10px -10px 20px 0px rgba(240, 46, 170, 0.6), inset 10px 10px 20px 0px rgba(240, 46, 170, 0.6);}
+.card-1{box-shadow: inset -10px -10px 20px 0px rgba(235, 50, 50,0.6), inset 10px 10px 20px 0px rgba(235, 50, 50,0.6);}
 .card-2{box-shadow: inset -10px -10px 20px 0px rgba(136, 255, 170, 0.6), inset 10px 10px 20px 0px rgba(136, 255, 170, 0.6);}
 .card-3{box-shadow: inset -10px -10px 20px 0px rgba(255, 255, 170, 0.6), inset 10px 10px 20px 0px rgba(255, 255, 170, 0.6);}
 
@@ -264,6 +249,7 @@ color: white;
   visibility: hidden;
   animation: gratulations 6s ease-in-out;
   text-shadow: #000 0px 0px 25px;
+  box-shadow: 0px 0px 10px 5px #000;
   
   &:after {
     content: '';
@@ -293,12 +279,13 @@ color: white;
   z-index: 99;
   background-color: #222;
   width: 75%;
-  height: 55%;
+  
   text-align: center;
   visibility: hidden;
   animation: scoreboard 3s ease-in-out;
   animation-fill-mode: forwards;
   text-shadow: #000 0px 0px 25px;
+  box-shadow: 0px 0px 10px 5px #000;
   
   &:after {
     content: '';
@@ -319,4 +306,37 @@ color: white;
 
 .scoreboard .bi {
   scale: 5;
+}
+
+.yourTurn {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  z-index: 99;
+  background-color: #222;
+  width: 50%;
+  text-align: center;
+  visibility: hidden;
+  animation: yourTurn 3s ease-in-out;
+  text-shadow: #000 0px 0px 25px;
+  box-shadow: 0px 0px 15px 5px #000;
+  
+  &:after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translate(-50%);
+    height: 50px;
+    width: 30%;
+    background-color: var(--playerColor);
+    clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);
+  }
+}
+@keyframes yourTurn {
+  0% {opacity: 0; scale: 0.1; visibility: visible;}
+  20% {opacity: 1; scale: 1; visibility: visible;}
+  70% {opacity: 1; scale: 1; visibility: visible;}
+  100% {opacity: 0; scale: 0.1; visibility: visible;}
 }

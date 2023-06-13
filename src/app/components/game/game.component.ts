@@ -24,7 +24,7 @@ export class GameComponent implements OnInit, OnDestroy {
   selectedShape = [[1,1], [1,1]];
   xy: number[] = [0,0];
   coords: number[] = [0, 0];
-  shaps: any = SHAPES.slice();
+  shaps: any;
   canPlaceDown: boolean = false;
   round: number = 1;
   currentPlayer: any;
@@ -32,19 +32,17 @@ export class GameComponent implements OnInit, OnDestroy {
   countSmallPieces = 89;
   leftPieces: any;
   standings = [0,1,2,3];
-  colors = ['#5af', '#f5a', '#8fa', '#ffa'];
+  colors = ['#5af', '#e33', '#8fa', '#ffa'];
 
   constructor(private socketIoService: SocketioService, private route: ActivatedRoute, private auth: AuthenticationService, private router: Router) { }
 
   @HostBinding("style.--playerColor") playerColor: string = '#888';
 
   ngOnInit(): void {
-    console.log(this.standings);
     this.play();
     this.auth.auth.authState.subscribe(() => {
       this.name = this.auth.name;
       this.receiveJoinedPlayers();
-      console.log(this.room);
       this.socketIoService.gameStarted(this.gameId, this.board);
       this.socketIoService.watchBoard().subscribe((message: any) =>{
         this.board = message.board;
@@ -64,22 +62,28 @@ export class GameComponent implements OnInit, OnDestroy {
         this.sortPlayers();
       });
       this.socketIoService.isStarting().subscribe(() => {
-        console.log('Started new game');
         this.play();
         this.router.navigate(['/game', this.gameId]);
+      });
+      this.socketIoService.leavingGame().subscribe(() => {
+        this.router.navigate(['/']);
       });
     });
   }
 
   ngOnDestroy(): void {
-      //this.shaps = SHAPES.slice();
-      console.log(this.shaps);
+      
   }
 
   receiveJoinedPlayers() {
-    this.socketIoService.receiveJoinedPlayers(this.gameId).subscribe((message: any) => {
-      this.room = message;
-    });
+    try {
+
+      this.socketIoService.receiveJoinedPlayers(this.gameId).subscribe((message: any) => {
+        this.room = message;
+      });
+    } catch {
+      this.router.navigate(['/']);
+    }
   }
   getEmptyBoard(): number[][] {
     return Array.from({ length: ROWS }, () =>
@@ -108,6 +112,10 @@ export class GameComponent implements OnInit, OnDestroy {
     return r;
   }
 
+  leaveGame(){
+    this.socketIoService.leaveGame(this.gameId);
+  }
+
   sortPlayers() {
     var test = this.leftPieces.slice();
     var len = test.length;
@@ -118,7 +126,6 @@ export class GameComponent implements OnInit, OnDestroy {
     indices.sort(function (a,b) {
       return test[a] < test[b] ? -1 : test[a] > test[b] ? 1 : 0;
     });
-    console.log(indices);
   }
 
   playAgain() {
@@ -127,10 +134,12 @@ export class GameComponent implements OnInit, OnDestroy {
 
 
   selectShape(s: any, x: any, y: any) {
-    this.isDragging = true;
-    this.selectedShape = s;
-    this.coords[0] = x;
-    this.coords[1] = y;
+    if (s[x][y] > 0) {
+      this.isDragging = true;
+      this.selectedShape = s;
+      this.coords[0] = x;
+      this.coords[1] = y;
+    }
   }
   check(x: any, y: any) {
     this.xy[0] = x;
@@ -166,7 +175,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
   isOutOfBound(x: number, y: number) {
     if ((x > 19) || (y > 19) || (x < 0) || (y < 0)){
-      console.log('Piece is out of bounds');
+      //console.log('Piece is out of bounds');
       return true;
     }
     this.tmpBoard[x][y] = this.currentPlayerIndex+1;
@@ -174,7 +183,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
   isOverlaping(x: any, y: number) {
     if (this.board[x][y] > 0){
-      console.log('is overlaping');
+      //console.log('is overlaping');
       return true;
     }
     return false;
@@ -182,25 +191,25 @@ export class GameComponent implements OnInit, OnDestroy {
   isEdging(x: any, y: any){
     if (x-1 >= 0){
       if (this.board[x-1][y] == this.currentPlayerIndex+1) {
-        console.log('piece is edgeing');
+        //console.log('piece is edgeing');
         return true;
       }
     }
     if (x+1 < 20){
       if (this.board[x+1][y] == this.currentPlayerIndex+1){
-        console.log('piece is edgeing');
+        //console.log('piece is edgeing');
         return true;
       }
     }
     if (y-1 >= 0){
       if (this.board[x][y-1] == this.currentPlayerIndex+1){
-        console.log('piece is edgeing');
+        //console.log('piece is edgeing');
         return true;
       }
     }
     if (y+1 < 20){
       if (this.board[x][y+1] == this.currentPlayerIndex+1){
-        console.log('piece is edgeing');
+        //console.log('piece is edgeing');
         return true;
       } 
     }
@@ -212,25 +221,25 @@ export class GameComponent implements OnInit, OnDestroy {
     }
     if (x-1 >= 0 && y-1 >= 0){
       if (this.board[x-1][y-1] == this.currentPlayerIndex+1) {
-        console.log('can connect');
+        //console.log('can connect');
         return true;
       }
     }
     if (x-1 >= 0 && y+1 < 20){
       if (this.board[x-1][y+1] == this.currentPlayerIndex+1) {
-        console.log('can connect');
+        //console.log('can connect');
         return true;
       }
     }
     if (x+1 < 20 && y-1 >= 0){
       if (this.board[x+1][y-1] == this.currentPlayerIndex+1){
-        console.log('can connect');
+        //console.log('can connect');
         return true;
       }
     }
     if (x+1 < 20 && y+1 < 20){
       if (this.board[x+1][y+1] == this.currentPlayerIndex+1){
-        console.log('can connect');
+        //console.log('can connect');
         return true;
       }
     }
@@ -249,13 +258,10 @@ export class GameComponent implements OnInit, OnDestroy {
         matrix[y - j][i] = k;
       }
     }
-    console.log(x);
-    console.log(this.coords);
     let tmpX = this.coords[0];
     let tmpY = this.coords[1];
     this.coords[0] = y-tmpY;
-    this.coords[1] = y-tmpX;
-    console.log(this.coords);
+    this.coords[1] = tmpX;
   }
 
   rotateRight(matrix: any) {
@@ -271,22 +277,28 @@ export class GameComponent implements OnInit, OnDestroy {
         matrix[j][y - i] = k
       }
     }
+    let tmpX = this.coords[0];
+    let tmpY = this.coords[1];
+    this.coords[0] = tmpY;
+    this.coords[1] = y-tmpX;
   }
 
   mirrorHorizontal(matrix: any) {
     this.rotateLeft(matrix);
+    this.coords[1] = (matrix.length - 1) - this.coords[1];
     matrix.map(function(arr: any){return arr.reverse();});
     this.rotateRight(matrix);
   }
   
   mirrorVertical(matrix: any) {
+    this.coords[1] = (matrix.length - 1) - this.coords[1];
     matrix.map(function(arr: any){return arr.reverse();});
   }
 
   cancelRound() {
     if (this.name==this.currentPlayer){
       this.selectedShape = [];
-      this.socketIoService.placeDown(this.gameId, this.board, this.countSmallPieces);
+      this.socketIoService.placeDown(this.gameId, this.board, this.countSmallPieces, -1);
     }
   }
 
@@ -305,11 +317,11 @@ export class GameComponent implements OnInit, OnDestroy {
       this.shaps.splice(index,1);
       this.selectedShape = [];
       this.countPieces();
-      this.socketIoService.placeDown(this.gameId, this.board, this.countSmallPieces);
+      this.socketIoService.placeDown(this.gameId, this.board, this.countSmallPieces, index);
       this.canPlaceDown = false;
       this.sortPlayers();
     } else {
-      console.log("You can't place it here");
+      //console.log("You can't place it here");
     }
   }
   checkRow(x: any) {

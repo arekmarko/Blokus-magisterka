@@ -1,14 +1,16 @@
 <div class="container p-3">
-    <h1 *ngIf="auth.currentUser$ | async as user">Hello, {{user.displayName}}!</h1>
-    <h5>Select your room!</h5>
+    <button class="btn px-0" style="color: chartreuse;" routerLink="/"><i class="bi bi-chevron-left"></i> Wróć</button>
+    <h2 *ngIf="auth.currentUser$ | async as user">Witaj, <span style="color:chartreuse">{{user.displayName}}</span>!</h2>
+    <h5>Wybierz pokój!</h5>
     <div id="selection" class="container mt-5 rounded-3">
         <div class="row pt-4 px-3">
-            <h5 class="col-2">Rooms:</h5>
+            <h5 class="col-2">Pokoje:</h5>
             <div class="col">
                 <input class="form-control" [(ngModel)]="roomName" type="text">
             </div>
             <div class="col-5 text-end">
-                <button class="greenbutton" (click)="createRoom()">Create new room</button>
+                <button id="button" class="greenbutton" *ngIf="auth.currentUser$ | async" (click)="createRoom()">Stwórz nowy pokój</button>
+                <button id="button" class="greenbutton" *ngIf="!(auth.currentUser$ | async)">Stwórz nowy pokój</button>
             </div>
         </div>
     <div class="row p-3">
@@ -20,14 +22,15 @@
                     <p>{{r.users.length}}/4</p>
                 </div>
                 <div class="col text-end">
-                    <button (click)="joinRoom(r)">Join</button>
+                    <button id="button" (click)="joinRoom(r)">Dołącz</button>
                 </div>
+                <hr>
             </div>
         </div>
         <div *ngIf="rooms?.length === 0">
             <hr class="solid">
             <div class="text-center">
-                <a style="color: #666">There is no room yet.</a>
+                <a style="color: #666">Nie znaleziono pokoju.</a>
             </div>
         </div>
     </div>
