@@ -314,10 +314,13 @@ export class GameComponent implements OnInit, OnDestroy {
       let index = this.shaps.findIndex((s:any) => 
         s === this.selectedShape
       );
+      let shapesIndex = SHAPES.findIndex((s: any) =>
+        s === this.selectedShape
+      );
       this.shaps.splice(index,1);
       this.selectedShape = [];
       this.countPieces();
-      this.socketIoService.placeDown(this.gameId, this.board, this.countSmallPieces, index);
+      this.socketIoService.placeDown(this.gameId, this.board, this.countSmallPieces, shapesIndex);
       this.canPlaceDown = false;
       this.sortPlayers();
     } else {

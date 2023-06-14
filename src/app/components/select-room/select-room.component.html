@@ -6,7 +6,7 @@
         <div class="row pt-4 px-3">
             <h5 class="col-2">Pokoje:</h5>
             <div class="col">
-                <input class="form-control" [(ngModel)]="roomName" type="text">
+                <input class="form-control" [(ngModel)]="roomName" type="text" placeholder="Wpisz nazwę pokoju...">
             </div>
             <div class="col-5 text-end">
                 <button id="button" class="greenbutton" *ngIf="auth.currentUser$ | async" (click)="createRoom()">Stwórz nowy pokój</button>

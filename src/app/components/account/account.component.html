@@ -41,8 +41,9 @@
             </div>
             <div class="col-lg position-relative" style="height: 200px;">
                 <h5 class="display-6 fs-4">Najrzadziej używany element</h5>
-                <h5 class="display-6 fs-6">Nieużyty <span class="fs-4" style="color: chartreuse">{{leastUsedValue}}</span> raz<span *ngIf="leastUsedValue>1">y</span></h5>
-                <div class="shape">
+                <h5 class="display-6 fs-6" *ngIf="leastUsedValue >= 0">Nieużyty <span class="fs-4" style="color: chartreuse">{{gamesPlayed - leastUsedValue}}</span> raz<span *ngIf="leastUsedValue>1">y</span></h5>
+                <h5 class="display-6 fs-6" *ngIf="leastUsedValue==null" style="color: #666;">Brak statystyk.</h5>
+                <div class="shape" *ngIf="leastUsedValue != null">
                     <div *ngFor="let x of leastUsed; let xi = index">
                         <div *ngIf="checkRow(x)">
                             <div class="row justify-content-center">
@@ -56,8 +57,9 @@
             </div>
             <div class="col-lg position-relative" style="height: 200px;">
                 <h5 class="display-6 fs-4">Najczęściej używany przy rozpoczęciu</h5>
-                <h5 class="display-6 fs-6">Wykorzystany <span class="fs-4" style="color: chartreuse">{{beginsWithValue}}</span> raz<span *ngIf="beginsWithValue>1">y</span></h5>
-                <div class="shape">
+                <h5 class="display-6 fs-6" *ngIf="beginsWithValue >= 0">Wykorzystany <span class="fs-4" style="color: chartreuse">{{beginsWithValue}}</span> raz<span *ngIf="beginsWithValue>1">y</span></h5>
+                <h5 class="display-6 fs-6" *ngIf="beginsWithValue == null" style="color: #666;">Brak statystyk.</h5>
+                <div class="shape"  *ngIf="beginsWithValue != null">
                     <div *ngFor="let x of beginsWith; let xi = index">
                         <div *ngIf="checkRow(x)">
                             <div class="row justify-content-center">

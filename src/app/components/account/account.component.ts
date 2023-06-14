@@ -14,8 +14,8 @@ export class AccountComponent implements OnInit {
   wins: any;
   zeroPieces: any;
   leftPieces: any;
-  leastUsed = SHAPES[0].slice();
-  beginsWith = SHAPES[20].slice();
+  leastUsed: any;
+  beginsWith: any;
   leastUsedValue: any;
   beginsWithValue: any;
   avgPieces: any;
